@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('register',[App\Http\Controllers\passportAuthController::class,'registerUserExample']);
+Route::post('login',[App\Http\Controllers\passportAuthController::class,'loginUserExample']);
+//add this middleware to ensure that every request is authenticated
+Route::middleware('auth:api')->group(function(){
+    Route::get('user', [App\Http\Controllers\passportAuthController::class,'authenticatedUserDetails']);
 });

@@ -17,11 +17,13 @@ use Illuminate\Support\Facades\Route;
 Route::post('register',[App\Http\Controllers\passportAuthController::class,'registerUserExample']);
 Route::post('login',[App\Http\Controllers\passportAuthController::class,'loginUserExample']);
 
-Route::post('add/product',[App\Http\Controllers\ProductController::class,'add']);
-Route::get('show/products',[App\Http\Controllers\ProductController::class,'show']);
+
 
 //add this middleware to ensure that every request is authenticated
 Route::middleware('auth:api')->group(function(){
     Route::get('user', [App\Http\Controllers\passportAuthController::class,'authenticatedUserDetails']);
+
+    Route::post('add/product',[App\Http\Controllers\ProductController::class,'add']);
+    Route::get('show/products',[App\Http\Controllers\ProductController::class,'show']);
 
 });

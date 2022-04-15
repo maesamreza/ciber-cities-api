@@ -4,15 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Validator;
 
 class passportAuthController extends Controller
 {
     public function registerUserExample(Request $request){
-        $this->validate($request,[
+        $valid = Validator::make($request->all(),[
             'name'=>'required',
             'email'=>'required|email|Unique:users,email',
             'password'=>'required|min:8',
         ]);
+
+        if($valid->fails()){
+
+            return response()->json(['status'=>'fails','message'=>'Validation errors','errors'=>$valid->errors()]);
+        }
         $user= User::create([
             'name' =>$request->name,
             'email'=>$request->email,

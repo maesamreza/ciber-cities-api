@@ -23,6 +23,11 @@ return new class extends Migration
             $table->text('images')->nullable();
             $table->integer('rating')->nullable();
             $table->text('review')->nullable();
+            $table->string('color')->nullable();
+            $table->string('size')->nullable();
+            $table->string('brand')->nullable();
+            $table->string('tags')->nullable();
+            $table->string('weight')->nullable();
             $table->timestamps();
         });
     }

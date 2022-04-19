@@ -26,6 +26,11 @@ class ProductController extends Controller
             'images'=>'required',
             'rating'=>'required',
             'review'=>'required',
+            'color'=>'required',
+            'size'=>'required',
+            'brand'=>'required',
+            'tags'=>'required',
+            'weight'=>'required',
         ]);
 
         if($valid->fails()){
@@ -41,6 +46,12 @@ class ProductController extends Controller
         $new_product->images = $request->images;
         $new_product->rating = $request->rating;
         $new_product->review = $request->review;
+        $new_product->color = $request->color;
+        $new_product->size = $request->size;
+        $new_product->brand = $request->brand;
+        $new_product->tags = $request->tags;
+        $new_product->tags = $request->tags;
+        $new_product->weight = $request->weight;
         $new_product->save();
 
         return response()->json(['Successfull'=>'New Product Added Successfully!'],200);

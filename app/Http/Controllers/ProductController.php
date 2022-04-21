@@ -43,15 +43,23 @@ class ProductController extends Controller
         $new_product->description = $request->description;
         $new_product->price = $request->price;
         $new_product->discounted_price = $request->discounted_price;
-        $new_product->images = $request->images;
+        if (!empty($request->image)) {
+            $file = $request->image;
+            $filename = "Image-" . time() . "-" . rand() . "." . $file->getClientOriginalExtension();
+            $file->storeAs('image', $filename, "public");
+            $new_product->image = "image/" . $filename;
+        } 
         $new_product->rating = $request->rating;
         $new_product->review = $request->review;
         $new_product->color = $request->color;
         $new_product->size = $request->size;
         $new_product->brand = $request->brand;
         $new_product->tags = $request->tags;
-        $new_product->tags = $request->tags;
+        // $new_product->tags = $request->tags;
         $new_product->weight = $request->weight;
+        $new_product->selected_qty = $request->selected_qty;
+        $new_product->status = $request->status;
+        $new_product->stock = $request->stock;
         $new_product->save();
 
         return response()->json(['Successfull'=>'New Product Added Successfully!'],200);

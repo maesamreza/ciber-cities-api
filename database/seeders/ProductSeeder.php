@@ -23,12 +23,16 @@ class ProductSeeder extends Seeder
             $product->price = '5000';
             $product->discounted_price = '4500';
             $product->rating = '4';
+            $product->image = 'download.jpg';
             $product->review = 'woo-vneck-tee';
             $product->color = 'Black';
-            $product->size = 'M';
+            $product->size = 'Medium';
             $product->brand = 'V-Neck T-Shirt';
             $product->tags = 'T-Shirt';
             $product->weight = '5';
+            $product->selected_qty = '5';
+            $product->status = 'New';
+            $product->stock = '50';
             $product->save();
         }
     }

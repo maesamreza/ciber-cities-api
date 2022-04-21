@@ -20,14 +20,17 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->double('price')->nullable();
             $table->double('discounted_price')->nullable();
-            $table->text('images')->nullable();
+            $table->text('image')->nullable();
             $table->integer('rating')->nullable();
             $table->text('review')->nullable();
             $table->string('color')->nullable();
-            $table->string('size')->nullable();
+            $table->enum('size',['Small', 'Medium', 'Large', 'Xlarge'])->default('Medium');
             $table->string('brand')->nullable();
             $table->string('tags')->nullable();
             $table->string('weight')->nullable();
+            $table->integer('selected_qty')->nullable();
+            $table->string('status')->nullable();
+            $table->integer('stock')->nullable();
             $table->timestamps();
         });
     }

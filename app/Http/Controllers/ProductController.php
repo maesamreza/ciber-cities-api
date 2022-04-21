@@ -41,11 +41,11 @@ class ProductController extends Controller
             return response()->json(['status'=>'fails','message'=>'Validation errors','errors'=>$valid->errors()]);
         }
         $new_product = new Product();
-        $new_product->name = $request->name;
+        $new_product->name = $request->product_name;
         $new_product->price = $request->price;
-        $new_product->discount_price = $request->discounted_price;
-        if (!empty($request->image)) {
-            $file = $request->image;
+        $new_product->discount_price = $request->discount;
+        if (!empty($request->product_image)) {
+            $file = $request->product_image;
             $filename = "Image-" . time() . "-" . rand() . "." . $file->getClientOriginalExtension();
             $file->storeAs('image', $filename, "public");
             $new_product->image = "image/" . $filename;
@@ -53,10 +53,10 @@ class ProductController extends Controller
         $new_product->color = $request->color;
         $new_product->size = $request->size;
         $new_product->brand = $request->brand;
-        $new_product->status = $request->status;
-        $new_product->selected_qty = $request->selected_qty;
-        $new_product->stock = $request->stock;
-        $new_product->details = $request->details;
+        $new_product->status = $request->product_status;
+        $new_product->selected_qty = $request->product_selected_qty;
+        $new_product->stock = $request->product_stock;
+        $new_product->details = $request->product_details;
         // $new_product->short_description = $request->short_description;
         // $new_product->description = $request->description;
         // $new_product->rating = $request->rating;

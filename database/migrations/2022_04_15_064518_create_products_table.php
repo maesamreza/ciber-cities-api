@@ -19,9 +19,9 @@ return new class extends Migration
             $table->double('price')->nullable();
             $table->double('discount_price')->nullable();
             $table->text('image')->nullable();
-            $table->string('color')->nullable();
-            $table->enum('size',['Small', 'Medium', 'Large', 'Xlarge'])->default('Medium');
-            $table->enum('details',['Available in black, Nude, Red, Clear', '4.5 inch Gold Heel', 'Pointed Toe', 'Patent', 'Imported'])->default('4.5 inch Gold Heel');
+            $table->mediumText('color')->nullable();
+            $table->mediumText('size')->nullable();
+            $table->mediumText('details')->nullable();
             $table->string('brand')->nullable();
             $table->integer('selected_qty')->nullable();
             $table->string('status')->nullable();

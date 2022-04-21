@@ -17,22 +17,21 @@ class ProductSeeder extends Seeder
     {
         for ($i=0; $i <  20; $i++) { 
             $product = new Product();
-            $product->title = 'V-Neck T-Shirt';
-            $product->short_description = 'This is a variable product.	';
-            $product->description = 'Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.	';
+            $product->name = 'V-Neck T-Shirt';
             $product->price = '5000';
-            $product->discounted_price = '4500';
-            $product->rating = '4';
+            $product->discount_price = '4500';
             $product->image = 'download.jpg';
-            $product->review = 'woo-vneck-tee';
             $product->color = 'Black';
-            $product->size = 'Medium';
             $product->brand = 'V-Neck T-Shirt';
-            $product->tags = 'T-Shirt';
-            $product->weight = '5';
             $product->selected_qty = '5';
             $product->status = 'New';
             $product->stock = '50';
+            // $product->short_description = 'This is a variable product.	';
+            // $product->description = 'Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.	';
+            // $product->rating = '4';
+            // $product->review = 'woo-vneck-tee';
+            // $product->tags = 'T-Shirt';
+            // $product->weight = '5';
             $product->save();
         }
     }

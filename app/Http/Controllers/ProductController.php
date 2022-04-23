@@ -69,4 +69,18 @@ class ProductController extends Controller
 
         return response()->json(['Successfull'=>'New Product Added Successfully!'],200);
     }
+    public function search($name)
+    {
+        if (!empty($name)) {
+            $product = Product::where('name','LIKE','%'.$name.'%')->get();
+            if(count($product)){
+                return response()->json(['Products'=>ProductsResource::collection($product)],200);
+            }else{
+                return response()->json(['error'=>'Product not found'],500);
+            }
+        }else{
+            return response()->json(['error'=>'Parameter is null'],500);
+        }
+
+    }
 }

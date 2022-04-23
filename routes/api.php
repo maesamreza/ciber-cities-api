@@ -22,8 +22,9 @@ Route::post('login',[App\Http\Controllers\passportAuthController::class,'loginUs
 //add this middleware to ensure that every request is authenticated
 Route::middleware('auth:api')->group(function(){
     Route::get('user', [App\Http\Controllers\passportAuthController::class,'authenticatedUserDetails']);
-
+    
     Route::post('add/product',[App\Http\Controllers\ProductController::class,'add']);
     
 });
+Route::get('search/{name}', [App\Http\Controllers\ProductController::class,'search']);
     Route::get('products',[App\Http\Controllers\ProductController::class,'show']);

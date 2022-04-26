@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class passportAuthController extends Controller
@@ -20,11 +21,12 @@ class passportAuthController extends Controller
             return response()->json(['status'=>'fails','message'=>'Validation errors','errors'=>$valid->errors()]);
         }
         $user= User::create([
+            'role_id' =>2,
             'name' =>$request->name,
             'email'=>$request->email,
             'password'=>bcrypt($request->password)
         ]);
-        auth('user')->attempt([
+        auth()->attempt([
             'name' =>$request->name,
             'email'=>$request->email,
             'password'=>$request->password
@@ -35,6 +37,44 @@ class passportAuthController extends Controller
         return response()->json(['Success'=>'New User Registered Successfully!'],200);
     }
 
+    public function sellerRegisterUserExample(Request $request){
+        $valid = Validator::make($request->all(),[
+            'name'=>'required',
+            'email'=>'required|email|Unique:users,email',
+            'password'=>'required|min:8',
+            'company'=>'required',
+            'phone'=>'required',
+            'city'=>'required',
+            'state'=>'required',
+            'address'=>'required',
+        ]);
+
+        if($valid->fails()){
+
+            return response()->json(['status'=>'fails','message'=>'Validation errors','errors'=>$valid->errors()]);
+        }
+        $user= User::create([
+            'role_id' =>3,
+            'name' =>$request->name,
+            'email'=>$request->email,
+            'password'=>bcrypt($request->password),
+            'company'=>$request->company,
+            'phone'=>$request->phone,
+            'city'=>$request->city,
+            'state'=>$request->state,
+            'address'=>$request->address,
+
+        ]);
+        auth()->attempt([
+            'name' =>$request->name,
+            'email'=>$request->email,
+            'password'=>$request->password
+        ]);
+        //  return auth('user')->user();
+        // $access_token_example = auth('user')->user()->createToken('uhugfy')->access_token;
+        //return the access token we generated in the above step
+        return response()->json(['Success'=>'New Seller Registered Successfully!'],200);
+    }
     /**
      * login user to our application
      */
@@ -43,29 +83,58 @@ class passportAuthController extends Controller
             'email'=>'required|email|Exists:users,email',
             'password'=>'required|min:8',
         ]);
-        $login_credentials=[
-            'email'=>$request->email,
-            'password'=>$request->password,
-        ];
-        if(auth()->attempt($login_credentials)){
-            //generate the token for the user
-            $user = auth('user')->user();
-            $user_login_token= auth()->user()->createToken('PassportExample@Section.io')->accessToken;
-            //now return this token on success login attempt
-            return response()->json(['token' => $user_login_token,'user'=>$user], 200);
+        $user = User::where('email',$request->email)->whereHas('role',function ($query) {
+            $query->where('name','user');
+        })->get();
+        if(count($user)){
+            $login_credentials=[
+                'email'=>$request->email,
+                'password'=>$request->password,
+            ];
+            if(auth()->attempt($login_credentials)){
+                $user_login_token= auth()->user()->createToken('PassportExample@Section.io')->accessToken;
+                return response()->json(['token' => $user_login_token,'user'=>$user], 200);
+            }
+            else{
+                return response()->json(['error' => 'UnAuthorised Access'], 500);
+            }
         }
-        else{
-            //wrong login credentials, return, user not authorised to our system, return error code 401
-            return response()->json(['error' => 'UnAuthorised Access'], 500);
+        return response()->json(['error' => 'UnAuthorised Access'], 500);
+    }
+
+    public function loginSellerExample(Request $request){
+        $this->validate($request,[
+            'email'=>'required|email|Exists:users,email',
+            'password'=>'required|min:8',
+        ]);
+        $user = User::where('email',$request->email)->whereHas('role',function ($query) {
+            $query->where('name','seller');
+        })->get();
+        if(count($user)){
+            $login_credentials=[
+                'email'=>$request->email,
+                'password'=>$request->password,
+            ];
+            if(auth()->attempt($login_credentials)){
+                $user_login_token= auth()->user()->createToken('PassportExample@Section.io')->accessToken;
+                return response()->json(['token' => $user_login_token,'seller'=>$user], 200);
+            }
+            else{
+                return response()->json(['error' => 'UnAuthorised Access'], 500);
+            }
         }
+        return response()->json(['error' => 'UnAuthorised Access'], 500);
     }
 
     /**
      * This method returns authenticated user details
      */
     public function authenticatedUserDetails(){
-        //returns details
-        auth('user')->user();
-        return response()->json(['authenticated-user' => auth()->user()], 200);
+        $user = auth()->user();
+        return response()->json(['authenticated-user' => $user], 200);
+    }
+    public function authenticatedSellerDetails(){
+        $seller = auth()->user();
+        return response()->json(['authenticated-seller' => $seller], 200);
     }
 }

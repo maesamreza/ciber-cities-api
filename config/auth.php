@@ -48,6 +48,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'seller' => [
+            'driver' => 'session',
+            'provider' => 'sellers',
+        ],
 
         'api' => [
             'driver' => 'passport',
@@ -81,6 +85,10 @@ return [
             'model' => App\Models\User::class,
         ],
         'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+        'sellers' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],

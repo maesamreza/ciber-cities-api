@@ -15,15 +15,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('register',[App\Http\Controllers\passportAuthController::class,'registerUserExample']);
+Route::post('seller/register',[App\Http\Controllers\passportAuthController::class,'sellerRegisterUserExample']);
 Route::post('login',[App\Http\Controllers\passportAuthController::class,'loginUserExample']);
+Route::post('seller/login',[App\Http\Controllers\passportAuthController::class,'loginSellerExample']);
 
 
 
 //add this middleware to ensure that every request is authenticated
 Route::middleware('auth:api')->group(function(){
     Route::get('user', [App\Http\Controllers\passportAuthController::class,'authenticatedUserDetails']);
+    Route::get('seller', [App\Http\Controllers\passportAuthController::class,'authenticatedSellerDetails']);
     
     Route::post('add/product',[App\Http\Controllers\ProductController::class,'add']);
+    Route::post('add/product/seller',[App\Http\Controllers\ProductController::class,'sellerAddProd']);
     
 });
 Route::get('search/{name}', [App\Http\Controllers\ProductController::class,'search']);

@@ -24,9 +24,22 @@ class UserSeeder extends Seeder
         $admin->save();
 
         $user = new User();
+        $user->role_id = 2;
         $user->name = 'User';
         $user->email = 'user@gmail.com';
         $user->password = Hash::make('12345678');
         $user->save();
+
+        $seller = new User();
+        $seller->role_id = 3;
+        $seller->name = 'Seller';
+        $seller->email = 'seller@gmail.com';
+        $seller->password = Hash::make('12345678');
+        $seller->company = 'daraz';
+        $seller->phone = '1234567890';
+        $seller->city = 'karachi';
+        $seller->state = 'karachi';
+        $seller->address = 'nazimabad';
+        $seller->save();
     }
 }

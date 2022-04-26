@@ -26,26 +26,8 @@ class Product extends Model
         );
     }
 
-    // public function getColorAttribute($value){
-    //     dd($value);
-    //     return json_decode($value);
-    // }
-
-    // public function setColorAttribute($value){
-    //     return json_encode($value);
-    // }
-    // public function getDetailsAttribute($value){
-    //     return json_decode($value);
-    // }
-
-    // public function setDetailsAttribute($value){
-    //     return json_encode($value);
-    // }
-    // public function getSizeAttribute($value){
-    //     return json_decode($value);
-    // }
-
-    // public function setSizeAttribute($value){
-    //     return json_encode($value);
-    // }
+    public function user()
+    {
+        return $this->hasOne(User::class,'id','user_id');
+    }
 }

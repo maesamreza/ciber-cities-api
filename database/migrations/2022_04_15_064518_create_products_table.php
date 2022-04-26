@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->text('name')->nullable();
             $table->double('price')->nullable();
             $table->double('discount_price')->nullable();
@@ -26,6 +27,7 @@ return new class extends Migration
             $table->integer('selected_qty')->nullable();
             $table->string('status')->nullable();
             $table->integer('stock')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             // $table->integer('rating')->nullable();
             // $table->text('review')->nullable();
             // $table->string('tags')->nullable();

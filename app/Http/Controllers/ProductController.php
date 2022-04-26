@@ -17,17 +17,17 @@ class ProductController extends Controller
     public function add(Request $request)
     {
         $valid = Validator::make($request->all(),[
-            'name'=>'required',
+            'product_name'=>'required',
             'price'=>'required',
-            'discount_price'=>'required',
-            'image'=>'required',
+            'discount'=>'required',
+            'product_image'=>'required',
             'color'=>'required|array',
             'size'=>'required|array',
             'brand'=>'required',
-            'details'=>'required',
-            'status'=>'required',
-            'selected_qty'=>'required',
+            'product_status'=>'required',
+            'product_selected_qty'=>'required',
             'product_stock'=>'required',
+            'product_details'=>'required',
             // 'short_description'=>'required',
             // 'description'=>'required',
             // 'rating'=>'required',

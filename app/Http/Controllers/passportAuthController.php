@@ -37,7 +37,7 @@ class passportAuthController extends Controller
         return response()->json(['Success'=>'New User Registered Successfully!'],200);
     }
 
-    public function sellerRegisterUserExample(Request $request){
+    public function registerSellerExample(Request $request){
         $valid = Validator::make($request->all(),[
             'name'=>'required',
             'email'=>'required|email|Unique:users,email',

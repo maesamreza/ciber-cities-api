@@ -27,7 +27,7 @@ class ProductsResource extends JsonResource
             'product_stock'=>$this->stock,
             'product_name'=>$this->name,
             'size'=>$this->size,
-            'user'=>$this->user->name,
+            'user'=>$this->user,
             // 'short_description'=>$this->short_description,
             // 'description'=>$this->description,
             // 'rating'=>$this->rating,

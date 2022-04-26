@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('register',[App\Http\Controllers\passportAuthController::class,'registerUserExample']);
-Route::post('seller/register',[App\Http\Controllers\passportAuthController::class,'sellerRegisterUserExample']);
+Route::post('seller/register',[App\Http\Controllers\passportAuthController::class,'registerSellerExample']);
 Route::post('login',[App\Http\Controllers\passportAuthController::class,'loginUserExample']);
 Route::post('seller/login',[App\Http\Controllers\passportAuthController::class,'loginSellerExample']);
 

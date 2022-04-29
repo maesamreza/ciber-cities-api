@@ -42,7 +42,7 @@ class ProductSeeder extends Seeder
         for ($j=0; $j <  4; $j++) { 
             $products = new ProductImage();
             $products->product_id = 1;
-            $products->image = 'download.jpg';
+            $products->image = 'image/download.jpg';
             $products->save();
         }
 

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Product;
+use App\Models\ProductImage;
 
 class ProductSeeder extends Seeder
 {
@@ -21,7 +22,7 @@ class ProductSeeder extends Seeder
             $product->name = 'V-Neck T-Shirt';
             $product->price = '5000';
             $product->discount_price = '4500';
-            $product->image = 'download.jpg';
+            // $product->image = ['download.jpg','image.jpg','image1.jpg','image2.jpg'];
             $product->color = ["Red","Black","White","Blue"];
             $product->size = ["small","medium","large","xlarge"];
             $product->brand = 'V-Neck T-Shirt';
@@ -38,5 +39,12 @@ class ProductSeeder extends Seeder
             // dd($product);
             $product->save();
         }
+        for ($j=0; $j <  4; $j++) { 
+            $products = new ProductImage();
+            $products->product_id = 1;
+            $products->image = 'download.jpg';
+            $products->save();
+        }
+
     }
 }

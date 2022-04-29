@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Resources\ProductsResource;
+use App\Models\ProductImage;
 use Validator;
 class ProductController extends Controller
 {
     public function show()
     {
-       $all_product = Product::has('user')->with('user')->get();
+       $all_product = Product::has('user')->with('user','images')->get();
        return response()->json(['Products'=>ProductsResource::collection($all_product)],200);
     }
 
@@ -20,7 +21,6 @@ class ProductController extends Controller
             'product_name'=>'required',
             'price'=>'required',
             'discount'=>'required',
-            'product_image'=>'required',
             'color'=>'required|array',
             'size'=>'required|array',
             'brand'=>'required',
@@ -28,6 +28,7 @@ class ProductController extends Controller
             'product_selected_qty'=>'required',
             'product_stock'=>'required',
             'product_details'=>'required',
+            'product_image'=>'required|array',
             // 'short_description'=>'required',
             // 'description'=>'required',
             // 'rating'=>'required',
@@ -45,12 +46,6 @@ class ProductController extends Controller
             $new_product->name = $request->product_name;
             $new_product->price = $request->price;
             $new_product->discount_price = $request->discount;
-            if (!empty($request->product_image)) {
-                $file = $request->product_image;
-                $filename = "Image-" . time() . "-" . rand() . "." . $file->getClientOriginalExtension();
-                $file->storeAs('image', $filename, "public");
-                $new_product->image = "image/" . $filename;
-            } 
             $new_product->color = $request->color;
             $new_product->size = $request->size;
             $new_product->brand = $request->brand;
@@ -66,6 +61,16 @@ class ProductController extends Controller
             // $new_product->tags = $request->tags;
             // $new_product->weight = $request->weight;
             $new_product->save();
+            if (!empty($request->product_image)){
+                foreach ($request->product_image as $image) {
+                    $product_image = new ProductImage();
+                    $product_image->product_id = $new_product->id;
+                    $filename = "Image-" . time() . "-" . rand() . "." . $image->getClientOriginalExtension();
+                    $image->storeAs('image', $filename, "public");
+                    $product_image->image = "image/" . $filename;
+                    $product_image->save();
+                }
+            }
             return response()->json(['Successfull'=>'New Product Added Successfully!'],200);
         }else{
             return response()->json(['UnSuccessfull'=>'New Product not Added!'],500);

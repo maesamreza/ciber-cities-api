@@ -25,7 +25,7 @@ class ProductController extends Controller
             'size'=>'required|array',
             'brand'=>'required',
             'product_status'=>'required',
-            'product_selected_qty'=>'required',
+            'product_selected_qty'=>'nullable',
             'product_stock'=>'required',
             'product_details'=>'required',
             'product_image'=>'required|array',
@@ -50,7 +50,7 @@ class ProductController extends Controller
             $new_product->size = $request->size;
             $new_product->brand = $request->brand;
             $new_product->status = $request->product_status;
-            $new_product->selected_qty = $request->product_selected_qty;
+            // $new_product->selected_qty = $request->product_selected_qty;
             $new_product->stock = $request->product_stock;
             $new_product->details = $request->product_details;
             // $new_product->short_description = $request->short_description;
@@ -63,6 +63,7 @@ class ProductController extends Controller
             $new_product->save();
             if (!empty($request->product_image)){
                 foreach ($request->product_image as $image) {
+                    // dd($image);
                     $product_image = new ProductImage();
                     $product_image->product_id = $new_product->id;
                     $filename = "Image-" . time() . "-" . rand() . "." . $image->getClientOriginalExtension();

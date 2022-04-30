@@ -27,7 +27,7 @@ class ProductSeeder extends Seeder
             $product->size = ["small","medium","large","xlarge"];
             $product->brand = 'V-Neck T-Shirt';
             $product->status = 'New';
-            $product->selected_qty = '5';
+            // $product->selected_qty = '5';
             $product->stock = '50';
             $product->details = "<p>Product Details:</p><ul><li>4.5 inch Gold Heel</li> <li>Pointed Toe</li><li>Patent</li> <li>Imported</li></ul>";
             // $product->short_description = 'This is a variable product.	';
@@ -39,9 +39,9 @@ class ProductSeeder extends Seeder
             // dd($product);
             $product->save();
         }
-        for ($j=0; $j <  4; $j++) { 
+        for ($j=1; $j <  20; $j++) { 
             $products = new ProductImage();
-            $products->product_id = 1;
+            $products->product_id = $j;
             $products->image = 'image/download.jpg';
             $products->save();
         }

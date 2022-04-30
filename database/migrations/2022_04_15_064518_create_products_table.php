@@ -16,17 +16,17 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->text('name')->nullable();
-            $table->double('price')->nullable();
-            $table->double('discount_price')->nullable();
+            $table->string('name')->nullable();
+            $table->string('price')->nullable();
+            $table->string('discount_price')->nullable();
             // $table->text('image')->nullable();
-            $table->mediumText('color')->nullable();
-            $table->mediumText('size')->nullable();
+            $table->string('color')->nullable();
+            $table->string('size')->nullable();
             $table->mediumText('details')->nullable();
             $table->string('brand')->nullable();
-            $table->integer('selected_qty')->nullable();
+            $table->string('selected_qty')->nullable();
             $table->string('status')->nullable();
-            $table->integer('stock')->nullable();
+            $table->string('stock')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             // $table->integer('rating')->nullable();
             // $table->text('review')->nullable();

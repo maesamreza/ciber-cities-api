@@ -29,7 +29,7 @@ class ProductController extends Controller
             'product_stock'=>'required',
             'product_details'=>'required',
             'product_image'=>'required|array',
-            // 'short_description'=>'required',
+            'category'=>'required',
             // 'description'=>'required',
             // 'rating'=>'required',
             // 'review'=>'required',
@@ -50,7 +50,7 @@ class ProductController extends Controller
             $new_product->size = $request->size;
             $new_product->brand = $request->brand;
             $new_product->status = $request->product_status;
-            // $new_product->selected_qty = $request->product_selected_qty;
+            $new_product->category = $request->category;
             $new_product->stock = $request->product_stock;
             $new_product->details = $request->product_details;
             // $new_product->short_description = $request->short_description;
@@ -145,5 +145,18 @@ class ProductController extends Controller
             return response()->json(['error'=>'Parameter is null'],500);
         }
 
+    }
+    public function searchCategory($name)
+    {
+        if (!empty($name)) {
+            $product = Product::where('category','LIKE','%'.$name.'%')->get();
+            if(count($product)){
+                return response()->json(['Products'=>ProductsResource::collection($product)],200);
+            }else{
+                return response()->json(['error'=>'Product not found'],500);
+            }
+        }else{
+            return response()->json(['error'=>'Parameter is null'],500);
+        }
     }
 }

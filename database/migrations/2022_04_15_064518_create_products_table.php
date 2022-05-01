@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('price')->nullable();
             $table->string('discount_price')->nullable();
-            // $table->text('image')->nullable();
+            $table->string('category')->nullable();
             $table->string('color')->nullable();
             $table->string('size')->nullable();
             $table->mediumText('details')->nullable();

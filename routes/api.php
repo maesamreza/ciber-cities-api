@@ -31,4 +31,5 @@ Route::middleware('auth:api')->group(function(){
     
 });
 Route::get('search/{name}', [App\Http\Controllers\ProductController::class,'search']);
+Route::get('search/category/{name}', [App\Http\Controllers\ProductController::class,'searchCategory']);
     Route::get('products',[App\Http\Controllers\ProductController::class,'show']);

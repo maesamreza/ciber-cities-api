@@ -10,6 +10,7 @@ class Product extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['category'];
     public function color(): Attribute
     {
         return Attribute::make(

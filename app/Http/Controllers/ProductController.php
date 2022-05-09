@@ -29,7 +29,7 @@ class ProductController extends Controller
             'product_stock'=>'required',
             'product_details'=>'required',
             'product_image'=>'required|array',
-            'category'=>'required',
+            'category'=>'nullable',
             // 'description'=>'required',
             // 'rating'=>'required',
             // 'review'=>'required',

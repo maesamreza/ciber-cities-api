@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Resources\ProductsResource;
+use App\Models\Category;
 use App\Models\ProductImage;
+use App\Models\SubCategory;
 use Validator;
 class ProductController extends Controller
 {
     public function show()
     {
-       $all_product = Product::has('user')->with('user','images')->get();
+       $all_product = Product::has('user')->with('user','images','subCategories.categories')->get();
+    //    dd($all_product);
        return response()->json(['Products'=>ProductsResource::collection($all_product)],200);
     }
 
@@ -29,7 +32,8 @@ class ProductController extends Controller
             'product_stock'=>'required',
             'product_details'=>'required',
             'product_image'=>'required|array',
-            'category'=>'nullable',
+            'category'=>'required',
+            'sub_category'=>'required',
             // 'description'=>'required',
             // 'rating'=>'required',
             // 'review'=>'required',
@@ -43,6 +47,30 @@ class ProductController extends Controller
         if(auth()->user()->role_id == 3){
             $new_product = new Product();
             $new_product->user_id = auth()->user()->id;
+            if($request->category && $request->sub_category){
+                $category = Category::where('name',$request->category)->first();
+                if(!is_object($category)){
+                    $category = new Category();
+                    $category->name = $request->category;
+                    $category->save();
+
+                    $subcategory = new SubCategory();
+                    $subcategory->category_id = $category->id;
+                    $subcategory->name = $request->sub_category;
+                    $subcategory->save();
+                }else{
+                    $subcategory = SubCategory::whereHas('categories',function ($query) use($request,$category) {
+                        $query->where('id',$category->id);
+                       })->where('name', $request->sub_category)->first();
+                    if(!is_object($subcategory)){
+                        $subcategory = new SubCategory();
+                        $subcategory->category_id = $category->id;
+                        $subcategory->name = $request->sub_category;
+                        $subcategory->save();
+                    }
+                }
+                $new_product->sub_category_id = $subcategory->id;
+            }
             $new_product->name = $request->product_name;
             $new_product->price = $request->price;
             $new_product->discount_price = $request->discount;
@@ -50,7 +78,6 @@ class ProductController extends Controller
             $new_product->size = $request->size;
             $new_product->brand = $request->brand;
             $new_product->status = $request->product_status;
-            $new_product->category = $request->category;
             $new_product->stock = $request->product_stock;
             $new_product->details = $request->product_details;
             // $new_product->short_description = $request->short_description;
@@ -149,7 +176,9 @@ class ProductController extends Controller
     public function searchCategory($name)
     {
         if (!empty($name)) {
-            $product = Product::where('category','LIKE','%'.$name.'%')->get();
+            $product = Product::whereHas('subCategories',function($query) use($name){
+                $query->where('name','LIKE','%'.$name.'%');
+            })->get();
             if(count($product)){
                 return response()->json(['Products'=>ProductsResource::collection($product)],200);
             }else{

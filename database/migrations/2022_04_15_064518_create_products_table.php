@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('sub_category_id')->nullable();
             $table->string('name')->nullable();
             $table->string('price')->nullable();
             $table->string('discount_price')->nullable();
-            $table->string('category')->nullable();
             $table->string('color')->nullable();
             $table->string('size')->nullable();
             $table->mediumText('details')->nullable();
@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->string('stock')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('sub_category_id')->references('id')->on('sub_categories')->onDelete('cascade');
             // $table->integer('rating')->nullable();
             // $table->text('review')->nullable();
             // $table->string('tags')->nullable();

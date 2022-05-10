@@ -14,7 +14,12 @@ class ProductController extends Controller
     public function show()
     {
        $all_product = Product::has('user')->with('user','images','subCategories.categories')->get();
-    //    dd($all_product);
+       return response()->json(['Products'=>ProductsResource::collection($all_product)],200);
+    }
+
+    public function showProduct(Request $request)
+    {
+       $all_product = Product::where('id',$request->id)->has('user')->with('user','images','subCategories.categories')->get();
        return response()->json(['Products'=>ProductsResource::collection($all_product)],200);
     }
 
@@ -188,4 +193,112 @@ class ProductController extends Controller
             return response()->json(['error'=>'Parameter is null'],500);
         }
     }
+    
+
+    public function update(Request $request)
+    {
+        $valid = Validator::make($request->all(),[
+            'product_name'=>'required',
+            'price'=>'required',
+            'discount'=>'required',
+            'color'=>'required|array',
+            'size'=>'required|array',
+            'brand'=>'required',
+            'product_status'=>'required',
+            // 'product_selected_qty'=>'nullable',
+            'product_stock'=>'required',
+            'product_details'=>'required',
+            // 'product_image'=>'required|array',
+            'category'=>'required',
+            'sub_category'=>'required',
+            // 'description'=>'required',
+            // 'rating'=>'required',
+            // 'review'=>'required',
+            // 'tags'=>'required',
+            // 'weight'=>'required',
+        ]);
+
+        if($valid->fails()){
+            return response()->json(['status'=>'fails','message'=>'Validation errors','errors'=>$valid->errors()]);
+        }
+        $product = Product::where('id', $request->id)->first();
+        if(auth()->user()->role_id == 3){
+            $product->user_id = auth()->user()->id;
+            if($request->category && $request->sub_category){
+                $category = Category::where('name',$request->category)->first();
+                if(!is_object($category)){
+                    $category = new Category();
+                    $category->name = $request->category;
+                    $category->save();
+
+                    $subcategory = new SubCategory();
+                    $subcategory->category_id = $category->id;
+                    $subcategory->name = $request->sub_category;
+                    $subcategory->save();
+                }else{
+                    $subcategory = SubCategory::whereHas('categories',function ($query) use($request,$category) {
+                        $query->where('id',$category->id);
+                       })->where('name', $request->sub_category)->first();
+                    if(!is_object($subcategory)){
+                        $subcategory = new SubCategory();
+                        $subcategory->category_id = $category->id;
+                        $subcategory->name = $request->sub_category;
+                        $subcategory->save();
+                    }
+                }
+                $product->sub_category_id = $subcategory->id;
+            }
+            $product->name = $request->product_name;
+            $product->price = $request->price;
+            $product->discount_price = $request->discount;
+            $product->color = $request->color;
+            $product->size = $request->size;
+            $product->brand = $request->brand;
+            $product->status = $request->product_status;
+            $product->stock = $request->product_stock;
+            $product->details = $request->product_details;
+            $product->save();
+            return response()->json(['Successfull'=>'Product Updated Successfully!'],200);
+        }else{
+            return response()->json(['UnSuccessfull'=>'Product not Updated!'],500);
+        }
+    }
+    
+    public function addImage(Request $request)
+    {
+        if (!empty($request->product_image)){
+            foreach ($request->product_image as $image) {
+                $product_image = new ProductImage();
+                $product_image->product_id = $request->product_id;
+                $filename = "Image-" . time() . "-" . rand() . "." . $image->getClientOriginalExtension();
+                $image->storeAs('image', $filename, "public");
+                $product_image->image = "image/" . $filename;
+                $product_image->save();
+            }
+            return response()->json(['Successfull'=>'Product Image Added Successfully!'],200);
+        }else{
+            return response()->json(['Fail'=>'Product Image not Added!'],500);
+        }
+    }
+
+    public function deleteImage(Request $request)
+    {
+        $product = ProductImage::where('id', $request->id)->first();
+        if(!empty($product)){
+            if($product->delete()) return response()->json(['status'=>'successfully Image deleted'],200);
+        }else{
+            return response()->json(["status" => 'fail', 500]);
+        }
+    }
+
+    public function delete(Request $request)
+    {
+        $product = Product::where('id', $request->id)->first();
+        if(!empty($product)){
+            if($product->delete()) return response()->json(['status'=>'successfully deleted'],200);
+        }else{
+            return response()->json(["status" => 'fail', 500]);
+        }
+    }
+
 }

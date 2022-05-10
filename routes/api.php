@@ -27,6 +27,11 @@ Route::middleware('auth:api')->group(function(){
     Route::get('seller', [App\Http\Controllers\passportAuthController::class,'authenticatedSellerDetails']);
     
     Route::post('add/product',[App\Http\Controllers\ProductController::class,'add']);
+    Route::post('update/product',[App\Http\Controllers\ProductController::class,'update']);
+    Route::post('delete/product',[App\Http\Controllers\ProductController::class,'delete']);
+    Route::post('delete/image',[App\Http\Controllers\ProductController::class,'deleteImage']);
+    Route::post('add/image',[App\Http\Controllers\ProductController::class,'addImage']);
+    Route::post('show/product',[App\Http\Controllers\ProductController::class,'showProduct']);
     Route::post('order/review',[App\Http\Controllers\OrderController::class,'review']);
     Route::get('order/rating',[App\Http\Controllers\OrderController::class,'rating']);
     Route::get('order/sales',[App\Http\Controllers\OrderController::class,'sales']);

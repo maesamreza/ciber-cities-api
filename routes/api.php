@@ -30,6 +30,7 @@ Route::middleware('auth:api')->group(function(){
     Route::post('add/product',[App\Http\Controllers\ProductController::class,'add']);
     Route::post('update/product',[App\Http\Controllers\ProductController::class,'update']);
     Route::post('delete/product',[App\Http\Controllers\ProductController::class,'delete']);
+    Route::get('image/{id}',[App\Http\Controllers\ProductController::class,'image']);
     Route::post('delete/image',[App\Http\Controllers\ProductController::class,'deleteImage']);
     Route::post('add/image',[App\Http\Controllers\ProductController::class,'addImage']);
     Route::post('show/product',[App\Http\Controllers\ProductController::class,'showProduct']);

@@ -275,7 +275,13 @@ class ProductController extends Controller
             return response()->json(['UnSuccessfull'=>'Product not Updated!'],500);
         }
     }
-    
+
+    public function image($id)
+    {
+       $all_image = ProductImage::where('product_id',$id)->get();
+       return response()->json(['Images'=>$all_image],200);
+    }
+
     public function addImage(Request $request)
     {
         if (!empty($request->product_image)){

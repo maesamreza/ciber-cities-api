@@ -17,6 +17,12 @@ class ProductController extends Controller
        return response()->json(['Products'=>ProductsResource::collection($all_product)],200);
     }
 
+    public function vendorProduct()
+    {
+       $all_product = Product::has('user')->with('user','images','subCategories.categories')->where('user_id',auth()->user()->id)->get();
+       return response()->json(['Products'=>ProductsResource::collection($all_product)],200);
+    }
+
     public function showProduct(Request $request)
     {
        $all_product = Product::where('id',$request->id)->has('user')->with('user','images','subCategories.categories')->get();
@@ -57,11 +63,13 @@ class ProductController extends Controller
                 if(!is_object($category)){
                     $category = new Category();
                     $category->name = $request->category;
+                    $category->url = strtolower(preg_replace('/\s*/', '', $request->category));
                     $category->save();
 
                     $subcategory = new SubCategory();
                     $subcategory->category_id = $category->id;
                     $subcategory->name = $request->sub_category;
+                    $subcategory->url = strtolower(preg_replace('/\s*/', '', $request->category.'/'.$request->sub_category));
                     $subcategory->save();
                 }else{
                     $subcategory = SubCategory::whereHas('categories',function ($query) use($request,$category) {
@@ -71,6 +79,7 @@ class ProductController extends Controller
                         $subcategory = new SubCategory();
                         $subcategory->category_id = $category->id;
                         $subcategory->name = $request->sub_category;
+                        $subcategory->url = strtolower(preg_replace('/\s*/', '', $request->category.'/'.$request->sub_category));
                         $subcategory->save();
                     }
                 }
@@ -229,11 +238,13 @@ class ProductController extends Controller
                 if(!is_object($category)){
                     $category = new Category();
                     $category->name = $request->category;
+                    $category->url = strtolower(preg_replace('/\s*/', '', $request->category));
                     $category->save();
 
                     $subcategory = new SubCategory();
                     $subcategory->category_id = $category->id;
                     $subcategory->name = $request->sub_category;
+                    $subcategory->url = strtolower(preg_replace('/\s*/', '', $request->category.'/'.$request->sub_category));
                     $subcategory->save();
                 }else{
                     $subcategory = SubCategory::whereHas('categories',function ($query) use($request,$category) {
@@ -243,6 +254,7 @@ class ProductController extends Controller
                         $subcategory = new SubCategory();
                         $subcategory->category_id = $category->id;
                         $subcategory->name = $request->sub_category;
+                        $subcategory->url = strtolower(preg_replace('/\s*/', '', $request->category.'/'.$request->sub_category));
                         $subcategory->save();
                     }
                 }

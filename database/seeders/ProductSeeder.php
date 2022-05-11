@@ -23,30 +23,30 @@ class ProductSeeder extends Seeder
         $category = new Category();
         $subcategory = new SubCategory();
         
-        $category->create(['name'=>'Mens Collection']);
-        $category->create(['name'=>'Womens Collection']);
-        $category->create(['name'=>'Electronic Device']);
-        $category->create(['name'=>'Health & Beauty']);
+        $category->create(['name'=>'Mens Collection','url'=>'menscollection']);
+        $category->create(['name'=>'Womens Collection','url'=>'womenscollection']);
+        $category->create(['name'=>'Electronic Device','url'=>'electronicdevice']);
+        $category->create(['name'=>'Health & Beauty','url'=>'health&beauty']);
 
-        $subcategory->create(['category_id'=>1,'name'=>'Watch']);
-        $subcategory->create(['category_id'=>1,'name'=>'Shirts']);
-        $subcategory->create(['category_id'=>1,'name'=>'T-Shirts']);
-        $subcategory->create(['category_id'=>1,'name'=>'Jeans']);
+        $subcategory->create(['category_id'=>1,'name'=>'Watch','url'=>'menscollection/watch']);
+        $subcategory->create(['category_id'=>1,'name'=>'Shirts','url'=>'menscollection/shirts']);
+        $subcategory->create(['category_id'=>1,'name'=>'T-Shirts','url'=>'menscollection/t-shirts']);
+        $subcategory->create(['category_id'=>1,'name'=>'Jeans','url'=>'menscollection/jeans']);
         
-        $subcategory->create(['category_id'=>2,'name'=>'Watch']);
-        $subcategory->create(['category_id'=>2,'name'=>'Shirts']);
-        $subcategory->create(['category_id'=>2,'name'=>'T-Shirts']);
-        $subcategory->create(['category_id'=>2,'name'=>'Jeans']);
+        $subcategory->create(['category_id'=>2,'name'=>'Watch','url'=>'womenscollection/watch']);
+        $subcategory->create(['category_id'=>2,'name'=>'Shirts','url'=>'womenscollection/shirts']);
+        $subcategory->create(['category_id'=>2,'name'=>'T-Shirts','url'=>'womenscollection/t-shirts']);
+        $subcategory->create(['category_id'=>2,'name'=>'Jeans','url'=>'womenscollection/jeans']);
         
-        $subcategory->create(['category_id'=>3,'name'=>'Smart Phones']);
-        $subcategory->create(['category_id'=>3,'name'=>'Feature Phones']);
-        $subcategory->create(['category_id'=>3,'name'=>'Tablets']);
-        $subcategory->create(['category_id'=>3,'name'=>'Landline Phones']);
+        $subcategory->create(['category_id'=>3,'name'=>'Smart Phones','url'=>'electronicdevice/smartphones']);
+        $subcategory->create(['category_id'=>3,'name'=>'Feature Phones','url'=>'electronicdevice/featurephones']);
+        $subcategory->create(['category_id'=>3,'name'=>'Tablets','url'=>'electronicdevice/tablets']);
+        $subcategory->create(['category_id'=>3,'name'=>'Landline Phones','url'=>'electronicdevice/landlinephones']);
         
-        $subcategory->create(['category_id'=>4,'name'=>'Bath & Body']);
-        $subcategory->create(['category_id'=>4,'name'=>'Beauty Tools']);
-        $subcategory->create(['category_id'=>4,'name'=>'Hair Care']);
-        $subcategory->create(['category_id'=>4,'name'=>'Makeup']);
+        $subcategory->create(['category_id'=>4,'name'=>'Bath & Body','url'=>'health&beauty/bath&body']);
+        $subcategory->create(['category_id'=>4,'name'=>'Beauty Tools','url'=>'health&beauty/beautytools']);
+        $subcategory->create(['category_id'=>4,'name'=>'Hair Care','url'=>'health&beauty/haircare']);
+        $subcategory->create(['category_id'=>4,'name'=>'Makeup','url'=>'health&beauty/makeup']);
         
         for ($i=0; $i <  20; $i++) { 
             $product = new Product();

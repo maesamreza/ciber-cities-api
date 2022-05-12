@@ -140,7 +140,6 @@ class passportAuthController extends Controller
 
     public function updateSeller(Request $request)
     {
-        $seller = User::where('id',auth()->user()->id)->first();
         $valid = Validator::make($request->all(),[
             'name'=>'required',
             // 'email'=>'required|email|unique:users,email'.$seller->id,
@@ -151,24 +150,20 @@ class passportAuthController extends Controller
             'state'=>'required',
             'address'=>'required',
         ]);
-
+        
         if($valid->fails()){
-
+            
             return response()->json(['status'=>'fails','message'=>'Validation errors','errors'=>$valid->errors()]);
         }
-        $data = [
-            // 'role_id' =>3,
-            'name' =>$request->name,
-            // 'email'=>$request->email,
-            // 'password'=>bcrypt($request->password),
-            'company'=>$request->company,
-            'phone'=>$request->phone,
-            'city'=>$request->city,
-            'state'=>$request->state,
-            'address'=>$request->address,
-        ];
-        if($seller->update($data)){
-            return response()->json(['Success'=>'Seller Updated Successfully!','Seller'=>$seller??[]],200);
+            $seller = User::where('id',auth()->user()->id)->first();
+            $seller->name=$request->name;
+            $seller->company=$request->company;
+            $seller->phone=$request->phone;
+            $seller->city=$request->city;
+            $seller->state=$request->state;
+            $seller->address=$request->address;
+        if($seller->save()){
+            return response()->json(['Success'=>'Seller Updated Successfully!','seller'=>$seller??[]],200);
         }else{
             return response()->json(['fail'=>'Seller not Updated'],500);
         }

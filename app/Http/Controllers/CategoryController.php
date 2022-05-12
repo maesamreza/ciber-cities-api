@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\ProductsResource;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -13,5 +15,34 @@ class CategoryController extends Controller
         $category = Category::has('subCategory')->with('subCategory')->get();
        return response()->json(['Category'=>CategoryResource::collection($category)],200);
 
+    }
+
+    public function searchCategory(Request $request)
+    {
+        if (!empty($request->category_id )) {
+            if (!empty($request->category_id && $request->subcategory_id)) {
+                    $product = Product::whereHas('subCategories',function($query) use($request){
+                    $query->where('id',$request->subcategory_id);
+                    $query->whereRelation('categories','id',$request->category_id);
+                })->get();
+                if(count($product)){
+                    return response()->json(['Product'=>ProductsResource::collection($product)],200);
+                }else{
+                    return response()->json(['fail'=>'product not found'],500);
+                }
+            }else{
+                $product = Product::whereHas('subCategories',function($query) use($request){
+                    // $query->where('id',$request->subcategory_id);
+                    $query->whereRelation('categories','id',$request->category_id);
+                })->get();
+                if(count($product)){
+                    return response()->json(['Product'=>ProductsResource::collection($product)],200);
+                }else{
+                    return response()->json(['fail'=>'product not found'],500);
+                }
+            }
+        }else{
+            return response()->json(['fail'=>'Parameter is null'],500);
+        }
     }
 }

@@ -25,6 +25,7 @@ Route::post('seller/login',[App\Http\Controllers\passportAuthController::class,'
 Route::middleware('auth:api')->group(function(){
     Route::get('user', [App\Http\Controllers\passportAuthController::class,'authenticatedUserDetails']);
     Route::get('seller', [App\Http\Controllers\passportAuthController::class,'authenticatedSellerDetails']);
+    Route::post('update/seller', [App\Http\Controllers\passportAuthController::class,'updateSeller']);
     Route::get('vendor/products',[App\Http\Controllers\ProductController::class,'vendorProduct']);
     
     Route::post('add/product',[App\Http\Controllers\ProductController::class,'add']);
@@ -40,7 +41,8 @@ Route::middleware('auth:api')->group(function(){
     // Route::post('add/product/seller',[App\Http\Controllers\ProductController::class,'sellerAddProd']);
     
 });
-Route::get('search/{name}', [App\Http\Controllers\ProductController::class,'search']);
-Route::get('search/category/{name}', [App\Http\Controllers\ProductController::class,'searchCategory']);
+    Route::get('search/{name}', [App\Http\Controllers\ProductController::class,'search']);
+    // Route::get('search/{id}', [App\Http\Controllers\ProductController::class,'search']);
     Route::get('products',[App\Http\Controllers\ProductController::class,'show']);
     Route::get('category',[App\Http\Controllers\CategoryController::class,'show']);
+    Route::post('search/category', [App\Http\Controllers\CategoryController::class,'searchCategory']);

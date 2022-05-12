@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CategoryResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Resources\ProductsResource;
@@ -187,21 +188,7 @@ class ProductController extends Controller
         }
 
     }
-    public function searchCategory($name)
-    {
-        if (!empty($name)) {
-            $product = Product::whereHas('subCategories',function($query) use($name){
-                $query->where('name','LIKE','%'.$name.'%');
-            })->get();
-            if(count($product)){
-                return response()->json(['Products'=>ProductsResource::collection($product)],200);
-            }else{
-                return response()->json(['error'=>'Product not found'],500);
-            }
-        }else{
-            return response()->json(['error'=>'Parameter is null'],500);
-        }
-    }
+   
     
 
     public function update(Request $request)

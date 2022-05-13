@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('seller_id')->nullable();
             $table->string('customer_name', 40)->nullable();
             $table->string('email', 40)->nullable();
             $table->string('phone')->nullable();
@@ -25,11 +26,14 @@ return new class extends Migration
             $table->date('order_date')->nullable();
             $table->float('gross_amount')->nullable();
             $table->float('tax_amount')->nullable();
-            $table->float('discount')->nullable();
+            $table->float('shipping_amount')->nullable();
+            // $table->float('discount')->nullable();
             $table->float('net_amount')->nullable();
+            $table->string('payment_type')->nullable();
             $table->enum('status', ['pending', 'delivered'])->default('pending');
             $table->string('note')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('seller_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

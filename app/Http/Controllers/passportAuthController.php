@@ -53,18 +53,17 @@ class passportAuthController extends Controller
 
             return response()->json(['status'=>'fails','message'=>'Validation errors','errors'=>$valid->errors()]);
         }
-        $user= User::create([
-            'role_id' =>3,
-            'name' =>$request->name,
-            'email'=>$request->email,
-            'password'=>bcrypt($request->password),
-            'company'=>$request->company,
-            'phone'=>$request->phone,
-            'city'=>$request->city,
-            'state'=>$request->state,
-            'address'=>$request->address,
-
-        ]);
+            $user = new User();
+            $user->role_id = 3;
+            $user->name = $request->name;
+            $user->email= $request->email;
+            $user->password= bcrypt($request->password);
+            $user->company= $request->company;
+            $user->phone= $request->phone;
+            $user->city= $request->city;
+            $user->state= $request->state;
+            $user->address= $request->address;
+            $user->save();
         auth()->attempt([
             'name' =>$request->name,
             'email'=>$request->email,

@@ -7,6 +7,7 @@ use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Models\Review;
 use App\Models\Payment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Stripe;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,7 @@ class OrderController extends Controller
                     $order->city = $orders['city'];    
                     $order->delivery_address = $orders['delivery_address'];    
                     // $order->payment_type = $orders['payment_type'];    
-                    $order->order_date = $orders['order_date'];    
+                    $order->order_date = Carbon::now();
                     $order->gross_amount = $orders['gross_amount'];    
                     // $order->tax_amount = $orders['tax_amount'];    
                     $order->net_amount = $orders['net_amount'];    
@@ -48,9 +49,9 @@ class OrderController extends Controller
                             $order_product = new OrderProduct();
                             $order_product->order_id = $order->id;
                             $order_product->product_id = $product['id'];
-                            $order_product->qty = $product['qty'];
-                            $order_product->subtotal = $product['qty'] * $product_price->price;
-                            $order_product->discount = $product_price->discount_price * $product['qty'];
+                            $order_product->qty = $product['product_selected_qty'];
+                            $order_product->subtotal = $product['product_selected_qty'] * $product_price->price;
+                            $order_product->discount = $product_price->discount_price * $product['product_selected_qty'];
                             $order_product->save();
                         }
                     }else{
@@ -59,13 +60,13 @@ class OrderController extends Controller
                 }
                 if(!empty($request->total)){
                     $payment = new Payment();
-                    $payment->payment_method = $request->type;
+                    $payment->payment_method = $request->payment_method;
                     if($request->payment_method == "stripe"){
                         Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
                         $charge = Stripe\Charge::create ([
                             "amount" => round($request->total, 2) * 100,
                             "currency" => "usd",
-                            "source" => $request->stripeToken,
+                            "source" => $request->token,
                             "description" => "Test payment from HNHTECHSOLUTIONS." 
                         ]);
                         $payment->stripe_id = $charge->id;
@@ -84,7 +85,7 @@ class OrderController extends Controller
             }
             return response()->json(['Successfull'=>'New Order Placed!'],200);
         }else{
-            return response()->json(['Fail'=>'Order Request Failed!'],500);
+            return response()->json(['Fail'=>'Order Request Failed!', 'req' => $request->all()],500);
         }
     }
     

@@ -39,6 +39,8 @@ Route::middleware('auth:api')->group(function(){
     Route::post('order/review',[App\Http\Controllers\OrderController::class,'review']);
     Route::get('order/rating',[App\Http\Controllers\OrderController::class,'rating']);
     Route::get('order/sales',[App\Http\Controllers\OrderController::class,'sales']);
+
+    Route::post('payment',[App\Http\Controllers\PaymentController::class,'payment']);
     // Route::post('add/product/seller',[App\Http\Controllers\ProductController::class,'sellerAddProd']);
     
 });

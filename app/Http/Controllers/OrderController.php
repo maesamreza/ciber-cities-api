@@ -6,7 +6,9 @@ use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Product;
 use App\Models\Review;
+use App\Models\Payment;
 use Illuminate\Http\Request;
+use Stripe;
 use Illuminate\Support\Facades\DB;
 use Validator;
 
@@ -16,42 +18,71 @@ class OrderController extends Controller
     {
         // dd($request->order);
         if(!empty($request->order)){
-            foreach ($request->order as $key => $orders) {
-                if(is_object($orders)) $orders = $orders->toArray(); 
-                $order = new Order();
-                $order->user_id = auth()->user()->id;    
-                $order->seller_id = $orders['vendor_id'];    
-                $order->customer_name = $orders['customer_name'];    
-                $order->email = $orders['email'];    
-                $order->phone = $orders['phone'];    
-                $order->area = $orders['area'];    
-                $order->city = $orders['city'];    
-                $order->delivery_address = $orders['delivery_address'];    
-                $order->payment_type = $orders['payment_type'];    
-                $order->order_date = $orders['order_date'];    
-                $order->gross_amount = $orders['gross_amount'];    
-                $order->tax_amount = $orders['tax_amount'];    
-                $order->net_amount = $orders['net_amount'];    
-                $order->shipping_amount = $orders['shipping_amount'];    
-                $order->note = $orders['note'];    
-                $order->save();
-                if(!empty($orders['product'])){
-                    foreach ($orders['product'] as $key => $product) {
-                        if(is_object($product)) $product = $product->toArray(); 
-                        $product_price = Product::where('id',$product['id'])->first();
-                        $order_product = new OrderProduct();
-                        $order_product->order_id = $order->id;
-                        $order_product->product_id = $product['id'];
-                        $order_product->qty = $product['qty'];
-                        $order_product->subtotal = $product['qty'] * $product_price->price;
-                        $order_product->discount = $product_price->discount_price * $product['qty'];
-                        $order_product->save();
+            try {
+                DB::beginTransaction();
+                $order_ids = [];
+                foreach ($request->order as $key => $orders) {
+                    if(is_object($orders)) $orders = $orders->toArray(); 
+                    $order = new Order();
+                    $order->user_id = auth()->user()->id;    
+                    $order->seller_id = $orders['vendor_id'];    
+                    $order->customer_name = $orders['customer_name'];    
+                    $order->email = $orders['email'];    
+                    $order->phone = $orders['phone'];    
+                    $order->area = $orders['area'];    
+                    $order->city = $orders['city'];    
+                    $order->delivery_address = $orders['delivery_address'];    
+                    // $order->payment_type = $orders['payment_type'];    
+                    $order->order_date = $orders['order_date'];    
+                    $order->gross_amount = $orders['gross_amount'];    
+                    // $order->tax_amount = $orders['tax_amount'];    
+                    $order->net_amount = $orders['net_amount'];    
+                    // $order->shipping_amount = $orders['shipping_amount'];    
+                    $order->note = $orders['note'];    
+                    $order->save();
+                    $order_ids[] = $order->id;
+                    if(!empty($orders['product'])){
+                        foreach ($orders['product'] as $key => $product) {
+                            if(is_object($product)) $product = $product->toArray(); 
+                            $product_price = Product::where('id',$product['id'])->first();
+                            $order_product = new OrderProduct();
+                            $order_product->order_id = $order->id;
+                            $order_product->product_id = $product['id'];
+                            $order_product->qty = $product['qty'];
+                            $order_product->subtotal = $product['qty'] * $product_price->price;
+                            $order_product->discount = $product_price->discount_price * $product['qty'];
+                            $order_product->save();
+                        }
+                    }else{
+                        return response()->json(['Fail'=>' Order Product Request Failed!'],500);
                     }
-                }else{
-                    return response()->json(['Fail'=>' Order Product Request Failed!'],500);
                 }
+                if(!empty($request->total)){
+                    $payment = new Payment();
+                    $payment->payment_method = $request->type;
+                    if($request->payment_method == "stripe"){
+                        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+                        $charge = Stripe\Charge::create ([
+                            "amount" => round($request->total, 2) * 100,
+                            "currency" => "usd",
+                            "source" => $request->stripeToken,
+                            "description" => "Test payment from HNHTECHSOLUTIONS." 
+                        ]);
+                        $payment->stripe_id = $charge->id;
+                    }
+                    $payment->total = $request->total;
+                    $payment->save();
+                    $payment->orders()->sync($order_ids);
+                    // $payment_order = new OrderPayment();
+                    // $payment_order->payment_id = $payment->id;
+                    // $payment_order->order_id = $payment->id;
+                }
+                DB::commit();
+            } catch (\Throwable $th) {
+                DB::rollBack();
+                throw $th;
             }
-            return response()->json(['Successfull'=>'New Order Request Successfully sent!'],200);
+            return response()->json(['Successfull'=>'New Order Placed!'],200);
         }else{
             return response()->json(['Fail'=>'Order Request Failed!'],500);
         }

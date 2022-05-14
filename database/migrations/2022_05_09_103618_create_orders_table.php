@@ -25,8 +25,8 @@ return new class extends Migration
             $table->string('delivery_address', 255)->nullable();
             $table->date('order_date')->nullable();
             $table->float('gross_amount')->nullable();
-            $table->float('tax_amount')->nullable();
-            $table->float('shipping_amount')->nullable();
+            // $table->float('tax_amount')->nullable();
+            // $table->float('shipping_amount')->nullable();
             // $table->float('discount')->nullable();
             $table->float('net_amount')->nullable();
             $table->string('payment_type')->nullable();

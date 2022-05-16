@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->integer('stripe_id')->nullable();
+            $table->string('stripe_id')->nullable();
             $table->string('total')->nullable();
+            $table->string('brand')->nullable();
+            $table->string('card')->nullable();
             $table->enum('payment_method', ['stripe', 'cash on delivery'])->nullable();
             // $table->unsignedBigInteger('product_id');
             // $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');

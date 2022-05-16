@@ -17,7 +17,6 @@ class OrderController extends Controller
 {
     public function order(Request $request)
     {
-        // dd($request->order);
         if(!empty($request->order)){
             try {
                 DB::beginTransaction();
@@ -62,23 +61,25 @@ class OrderController extends Controller
                     $payment = new Payment();
                     $payment->payment_method = $request->payment_method;
                     if($request->payment_method == "stripe"){
-                        Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
-                        $charge = Stripe\Charge::create ([
-                            "amount" => round($request->total, 2) * 100,
-                            "currency" => "usd",
-                            "source" => $request->token,
-                            "description" => "Test payment from HNHTECHSOLUTIONS." 
-                        ]);
-                        $payment->stripe_id = $charge->id;
+                            Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+                            $charge = Stripe\Charge::create ([
+                                "amount" => round($request->total, 2) * 100,
+                                "currency" => "usd",
+                                "source" => $request->token['id'],
+                                "description" => "Test payment from HNHTECHSOLUTIONS." 
+                            ]);
+                            $payment->stripe_id = $charge->id;
+                        }
+                        $payment->brand = $request->token['brand'];
+                        $payment->card = $request->token['last4'];
+                        $payment->total = $request->total;
+                        $payment->save();
+                        $payment->orders()->sync($order_ids);
+                        // $payment_order = new OrderPayment();
+                        // $payment_order->payment_id = $payment->id;
+                        // $payment_order->order_id = $payment->id;
                     }
-                    $payment->total = $request->total;
-                    $payment->save();
-                    $payment->orders()->sync($order_ids);
-                    // $payment_order = new OrderPayment();
-                    // $payment_order->payment_id = $payment->id;
-                    // $payment_order->order_id = $payment->id;
-                }
-                DB::commit();
+                    DB::commit();
             } catch (\Throwable $th) {
                 DB::rollBack();
                 throw $th;
@@ -128,7 +129,7 @@ class OrderController extends Controller
 
     public function user_orders_details($id)
     {
-        $all_orders = Order::where('id',$id)->where('user_id',auth()->user()->id)->with('user_orders.products')->get();
+        $all_orders = Order::where('id',$id)->where('user_id',auth()->user()->id)->with('user_orders.products.images')->with('user_payments.payments')->get();
 
         return response()->json(['status'=>'success','orders'=>$all_orders]);
 
@@ -136,7 +137,7 @@ class OrderController extends Controller
 
     public function seller_orders_details($id)
     {
-        $all_orders = Order::where('id',$id)->where('seller_id',auth()->user()->id)->with('user_orders.products')->get();
+        $all_orders = Order::where('id',$id)->where('seller_id',auth()->user()->id)->with('user_orders.products.images')->with('user_payments.payments')->get();
 
         return response()->json(['status'=>'success','orders'=>$all_orders]);
 
@@ -151,7 +152,7 @@ class OrderController extends Controller
     }
     public function seller_orders()
     {
-        $all_orders = Order::where('seller_id',auth()->user()->id)->with('sellers')->get();
+        $all_orders = Order::where('seller_id',auth()->user()->id)->with('seller')->get();
 
         return response()->json(['status'=>'success','orders'=>$all_orders]);
 

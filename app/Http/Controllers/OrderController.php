@@ -125,4 +125,20 @@ class OrderController extends Controller
         ->select(DB::raw('sum(total) AS total'))->get();
                 return response()->json(['sales'=>$sales],200);
     }
+
+    public function user_orders()
+    {
+        $all_orders = Order::where('user_id',auth()->user()->id)->with('user_orders.products')->get();
+
+        return response()->json(['status'=>'success','user_orders'=>$all_orders]);
+
+    }
+
+    public function seller_orders()
+    {
+        $all_orders = Order::where('seller_id',auth()->user()->id)->with('user_orders.products')->get();
+
+        return response()->json(['status'=>'success','user_orders'=>$all_orders]);
+
+    }
 }

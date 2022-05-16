@@ -42,6 +42,9 @@ Route::middleware('auth:api')->group(function(){
 
     Route::post('payment',[App\Http\Controllers\PaymentController::class,'payment']);
     // Route::post('add/product/seller',[App\Http\Controllers\ProductController::class,'sellerAddProd']);
+
+    Route::get('user-orders',[App\Http\Controllers\OrderController::class,'user_orders']);
+    Route::get('seller-orders',[App\Http\Controllers\OrderController::class,'seller_orders']);
     
 });
     Route::get('search/{name}', [App\Http\Controllers\ProductController::class,'search']);
@@ -49,3 +52,5 @@ Route::middleware('auth:api')->group(function(){
     Route::get('products',[App\Http\Controllers\ProductController::class,'show']);
     Route::get('category',[App\Http\Controllers\CategoryController::class,'show']);
     Route::post('search/category', [App\Http\Controllers\CategoryController::class,'searchCategory']);
+
+

@@ -327,10 +327,9 @@ class ProductController extends Controller
 
     public function seller_top_products()
     {
-        $seller_top_products=Order::with(['user_orders'=>function($query){
-            $query->groupBy('order_id')
-            ->select('order_id',DB::raw('count(product_id) AS topProducts'));
-        }])->where('seller_id',auth()->user()->id)->get();
+        $seller_top_products=Product::with(['orders'=>function($query){
+            $query->withCount('products')->orderBy('id','desc');
+        }])->get();
         return response()->json(["status" => 'success','seller_top_products' => $seller_top_products],200);
     }
 

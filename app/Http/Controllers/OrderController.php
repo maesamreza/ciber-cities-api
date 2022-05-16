@@ -126,19 +126,34 @@ class OrderController extends Controller
                 return response()->json(['sales'=>$sales],200);
     }
 
-    public function user_orders()
+    public function user_orders_details($id)
     {
-        $all_orders = Order::where('user_id',auth()->user()->id)->with('user_orders.products')->get();
+        $all_orders = Order::where('id',$id)->with('user_orders.products')->get();
 
-        return response()->json(['status'=>'success','user_orders'=>$all_orders]);
+        return response()->json(['status'=>'success','orders'=>$all_orders]);
 
     }
 
-    public function seller_orders()
+    public function seller_orders_details($id)
     {
         $all_orders = Order::where('seller_id',auth()->user()->id)->with('user_orders.products')->get();
 
-        return response()->json(['status'=>'success','user_orders'=>$all_orders]);
+        return response()->json(['status'=>'success','orders'=>$all_orders]);
+
+    }
+
+    public function user_orders()
+    {
+        $all_orders = Order::where('user_id',auth()->user()->id)->with('users')->get();
+
+        return response()->json(['status'=>'success','orders'=>$all_orders]);
+
+    }
+    public function seller_orders()
+    {
+        $all_orders = Order::where('seller_id',auth()->user()->id)->with('sellers')->get();
+
+        return response()->json(['status'=>'success','orders'=>$all_orders]);
 
     }
 }

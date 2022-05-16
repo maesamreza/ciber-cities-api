@@ -46,6 +46,9 @@ Route::middleware('auth:api')->group(function(){
     Route::get('user-orders',[App\Http\Controllers\OrderController::class,'user_orders']);
     Route::get('seller-orders',[App\Http\Controllers\OrderController::class,'seller_orders']);
     
+    Route::get('user-orders-details/{id}',[App\Http\Controllers\OrderController::class,'user_orders_details']);
+    Route::get('seller-orders-details/{id}',[App\Http\Controllers\OrderController::class,'seller_orders_details']);
+    
 });
     Route::get('search/{name}', [App\Http\Controllers\ProductController::class,'search']);
     // Route::get('search/{id}', [App\Http\Controllers\ProductController::class,'search']);

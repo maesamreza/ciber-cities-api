@@ -7,9 +7,11 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Resources\ProductsResource;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\ProductImage;
 use App\Models\SubCategory;
 use Validator;
+use Illuminate\Support\Facades\DB;
 class ProductController extends Controller
 {
     public function show()
@@ -304,6 +306,28 @@ class ProductController extends Controller
         }else{
             return response()->json(["status" => 'fail', 500]);
         }
+    }
+
+    public function seller_products_count()
+    {
+        $seller_products_count=Product::where('user_id',3)->count();
+
+        return response()->json(["status" => 'success','products_count' => $seller_products_count],200);
+    }
+
+    public function seller_totalsales_count()
+    {
+        $seller_totalsales_count=Order::where('seller_id',3)->count();
+        return response()->json(["status" => 'success','totalsales_count' => $seller_totalsales_count],200);
+    }
+
+    public function seller_top_products()
+    {
+        $seller_top_products=Order::with(['user_orders.products'=>function($query){
+            $query->groupBy('id')
+            ->select('id',DB::raw('count(id) AS topProducts'));
+        }])->where('seller_id',3)->get();
+        return response()->json(["status" => 'success','seller_top_products' => $seller_top_products],200);
     }
 
 }

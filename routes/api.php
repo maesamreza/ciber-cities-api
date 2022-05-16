@@ -56,4 +56,10 @@ Route::middleware('auth:api')->group(function(){
     Route::get('category',[App\Http\Controllers\CategoryController::class,'show']);
     Route::post('search/category', [App\Http\Controllers\CategoryController::class,'searchCategory']);
 
+    Route::get('seller-products-count',[App\Http\Controllers\ProductController::class,'seller_products_count']);
+    Route::get('seller-totlasales-count',[App\Http\Controllers\ProductController::class,'seller_totalsales_count']);
+    Route::get('seller-top-products',[App\Http\Controllers\ProductController::class,'seller_top_products']);
+
+
+
 

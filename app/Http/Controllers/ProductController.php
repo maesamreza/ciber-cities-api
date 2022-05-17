@@ -327,7 +327,7 @@ class ProductController extends Controller
         ->where('order_date','<=',Carbon::today())
         ->groupBy('seller_id')
         ->select('seller_id',DB::raw('sum(net_amount) AS net_amount'))->get();
-        dd($subweek->subweek());
+        
         $seller_lastweeksales_count=Order::where('seller_id',auth()->user()->id)
         ->where('order_date','>=',$subweek->subweek())
         ->where('order_date','<=',Carbon::today())
@@ -348,9 +348,7 @@ class ProductController extends Controller
 
     public function seller_top_products()
     {
-        $seller_top_products=Product::with(['orders'=>function($query){
-            $query->withCount('products')->orderBy('id','desc');
-        }])->get();
+        $seller_top_products=Product::where('user_id',auth()->user()->id)->withCount('orders')->get();
         return response()->json(["status" => 'success','seller_top_products' => $seller_top_products],200);
     }
 

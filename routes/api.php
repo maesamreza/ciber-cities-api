@@ -50,8 +50,9 @@ Route::middleware('auth:api')->group(function(){
     Route::get('seller-orders-details/{id}',[App\Http\Controllers\OrderController::class,'seller_orders_details']);
     
         Route::get('seller-products-count',[App\Http\Controllers\ProductController::class,'seller_products_count']);
-        Route::get('seller-totlasales-count',[App\Http\Controllers\ProductController::class,'seller_totalsales_count']);
         Route::get('seller-top-products',[App\Http\Controllers\ProductController::class,'seller_top_products']);
+
+        Route::get('seller-totlasales-count',[App\Http\Controllers\ProductController::class,'seller_totalsales_count']);
     
 });
     Route::get('search/{name}', [App\Http\Controllers\ProductController::class,'search']);
@@ -59,6 +60,10 @@ Route::middleware('auth:api')->group(function(){
     Route::get('products',[App\Http\Controllers\ProductController::class,'show']);
     Route::get('category',[App\Http\Controllers\CategoryController::class,'show']);
     Route::post('search/category', [App\Http\Controllers\CategoryController::class,'searchCategory']);
+
+
+
+
 
 
 

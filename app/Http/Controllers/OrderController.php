@@ -69,9 +69,9 @@ class OrderController extends Controller
                                 "description" => "Test payment from HNHTECHSOLUTIONS." 
                             ]);
                             $payment->stripe_id = $charge->id;
+                            $payment->brand = $request->token['brand'];
+                            $payment->card = $request->token['last4'];
                         }
-                        $payment->brand = $request->token['brand'];
-                        $payment->card = $request->token['last4'];
                         $payment->total = $request->total;
                         $payment->save();
                         $payment->orders()->sync($order_ids);

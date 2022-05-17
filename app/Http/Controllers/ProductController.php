@@ -12,6 +12,7 @@ use App\Models\ProductImage;
 use App\Models\SubCategory;
 use Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 class ProductController extends Controller
 {
     public function show()
@@ -312,8 +313,30 @@ class ProductController extends Controller
     {
         $seller_totalsales_count=Order::where('seller_id',auth()->user()->id)->groupBy('seller_id')
         ->select('seller_id',DB::raw('sum(net_amount) AS net_amount'))->get();
-        return response()->json(["status" => 'success','totalsales_count' => $seller_totalsales_count],200);
+
+        $seller_todaysales_count=Order::where('seller_id',auth()->user()->id)
+        ->where('order_date',Carbon::today())
+        ->groupBy('seller_id')
+        ->select('seller_id',DB::raw('sum(net_amount) AS net_amount'))->get();
+
+        $submonth = Carbon::now();
+        $subweek = Carbon::now();
+        
+        $seller_lastmonthsales_count=Order::where('seller_id',auth()->user()->id)
+        ->where('order_date','>=',$submonth->submonth())
+        ->where('order_date','<=',Carbon::today())
+        ->groupBy('seller_id')
+        ->select('seller_id',DB::raw('sum(net_amount) AS net_amount'))->get();
+        dd($subweek->subweek());
+        $seller_lastweeksales_count=Order::where('seller_id',auth()->user()->id)
+        ->where('order_date','>=',$subweek->subweek())
+        ->where('order_date','<=',Carbon::today())
+        ->groupBy('seller_id')
+        ->select('seller_id',DB::raw('sum(net_amount) AS net_amount'))->get();
+        return response()->json(["status" => 'success','totalsales_count'=>$seller_totalsales_count,'lastmonthsales_count' => $seller_lastmonthsales_count,'todaysales_count'=>$seller_todaysales_count,'lastweeksales_count'=>$seller_lastweeksales_count],200);
     }
+
+
 
     public function seller_products_count()
     {

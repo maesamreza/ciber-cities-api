@@ -336,8 +336,6 @@ class ProductController extends Controller
         return response()->json(["status" => 'success','totalsales_count'=>$seller_totalsales_count,'lastmonthsales_count' => $seller_lastmonthsales_count,'todaysales_count'=>$seller_todaysales_count,'lastweeksales_count'=>$seller_lastweeksales_count],200);
     }
 
-
-
     public function seller_products_count()
     {
         $seller_products_count=Product::where('user_id',auth()->user()->id)->count();

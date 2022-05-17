@@ -312,12 +312,11 @@ class ProductController extends Controller
     public function seller_totalsales_count()
     {
         $seller_totalsales_count=Order::where('seller_id',auth()->user()->id)->groupBy('seller_id')
-        ->select('seller_id',DB::raw('sum(net_amount) AS net_amount'))->get();
+        ->selectRaw('seller_id,sum(net_amount) AS net_amount')->get();
 
         $seller_todaysales_count=Order::where('seller_id',auth()->user()->id)
         ->where('order_date',Carbon::today())
-        ->groupBy('seller_id')
-        ->select('seller_id',DB::raw('sum(net_amount) AS net_amount'))->get();
+        ->selectRaw('seller_id, sum(net_amount) AS net_amount')->groupBy('seller_id')->get();
 
         $submonth = Carbon::now();
         $subweek = Carbon::now();
@@ -325,31 +324,36 @@ class ProductController extends Controller
         $seller_lastmonthsales_count=Order::where('seller_id',auth()->user()->id)
         ->where('order_date','>=',$submonth->submonth())
         ->where('order_date','<=',Carbon::today())
-        ->groupBy('seller_id')
-        ->select('seller_id',DB::raw('sum(net_amount) AS net_amount'))->get();
-        
+        ->selectRaw('seller_id, sum(net_amount) AS net_amount')->groupBy('seller_id')->get();
         $seller_lastweeksales_count=Order::where('seller_id',auth()->user()->id)
         ->where('order_date','>=',$subweek->subweek())
         ->where('order_date','<=',Carbon::today())
-        ->groupBy('seller_id')
-        ->select('seller_id',DB::raw('sum(net_amount) AS net_amount'))->get();
+        ->selectRaw('seller_id, sum(net_amount) AS net_amount')->groupBy('seller_id')->get();
         return response()->json(["status" => 'success','totalsales_count'=>$seller_totalsales_count,'lastmonthsales_count' => $seller_lastmonthsales_count,'todaysales_count'=>$seller_todaysales_count,'lastweeksales_count'=>$seller_lastweeksales_count],200);
     }
 
     public function seller_products_count()
     {
         $seller_products_count=Product::where('user_id',auth()->user()->id)->count();
-        $seller_category_count = Category::with(['subCategory'=>function($query){
-            $query->withCount('products')->orderBy('name','DESC');
-        }])->get();
+        $seller_category_count = SubCategory::with('categories:id,name')->withCount('products')->get();
         return response()->json(["status" => 'success','products_count' => $seller_products_count,
         'category_count'=>$seller_category_count],200);
     }
 
     public function seller_top_products()
     {
-        $seller_top_products=Product::where('user_id',auth()->user()->id)->withCount('orders')->get();
+        $seller_top_products=Product::with(['orders'=>function($query){
+            $query->withCount('products')->orderBy('id','desc');
+        }])->where('user_id',auth()->user()->id)->withCount('orders')->get();
+
         return response()->json(["status" => 'success','seller_top_products' => $seller_top_products],200);
     }
 
+    public function seller_top_customers()
+    {
+        $seller_top_customers = Order::selectRaw('user_id, SUM(net_amount) as total_amount')->with('users')->where('seller_id',auth()->user()->id)->groupBy('user_id')->get();
+        $seller_top_customers = $seller_top_customers->sortByDesc('total_amount')->values();
+        return response()->json(["status" => 'success','seller_top_customers' => $seller_top_customers],200);
+
+    }
 }

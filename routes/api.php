@@ -18,6 +18,7 @@ Route::post('register',[App\Http\Controllers\passportAuthController::class,'regi
 Route::post('seller/register',[App\Http\Controllers\passportAuthController::class,'registerSellerExample']);
 Route::post('login',[App\Http\Controllers\passportAuthController::class,'loginUserExample']);
 Route::post('seller/login',[App\Http\Controllers\passportAuthController::class,'loginSellerExample']);
+Route::post('admin/login',[App\Http\Controllers\passportAuthController::class,'loginAdminExample']);
 
 
 
@@ -27,6 +28,10 @@ Route::middleware('auth:api')->group(function(){
     Route::get('seller', [App\Http\Controllers\passportAuthController::class,'authenticatedSellerDetails']);
     Route::post('update/seller', [App\Http\Controllers\passportAuthController::class,'updateSeller']);
     Route::get('vendor/products',[App\Http\Controllers\ProductController::class,'vendorProduct']);
+    Route::get('admin/user', [App\Http\Controllers\passportAuthController::class,'userDetails']);
+    Route::get('admin/seller', [App\Http\Controllers\passportAuthController::class,'sellerDetails']);
+    Route::get('admin/user/delete/{id}', [App\Http\Controllers\passportAuthController::class,'userDelete']);
+    Route::get('admin/seller/delete/{id}', [App\Http\Controllers\passportAuthController::class,'sellerDelete']);
     
     Route::post('add/product',[App\Http\Controllers\ProductController::class,'add']);
     Route::post('update/product',[App\Http\Controllers\ProductController::class,'update']);

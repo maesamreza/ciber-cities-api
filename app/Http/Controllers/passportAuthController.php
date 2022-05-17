@@ -125,6 +125,29 @@ class passportAuthController extends Controller
         return response()->json(['error' => 'UnAuthorised Access'], 500);
     }
 
+    public function loginAdminExample(Request $request){
+        $this->validate($request,[
+            'email'=>'required|email|Exists:users,email',
+            'password'=>'required|min:8',
+        ]);
+        $user = User::where('email',$request->email)->whereHas('role',function ($query) {
+            $query->where('name','admin');
+        })->get();
+        if(count($user)){
+            $login_credentials=[
+                'email'=>$request->email,
+                'password'=>$request->password,
+            ];
+            if(auth()->attempt($login_credentials)){
+                $user_login_token= auth()->user()->createToken('PassportExample@Section.io')->accessToken;
+                return response()->json(['token' => $user_login_token,'admin'=>$user], 200);
+            }
+            else{
+                return response()->json(['error' => 'UnAuthorised Access'], 500);
+            }
+        }
+        return response()->json(['error' => 'UnAuthorised Access'], 500);
+    }
     /**
      * This method returns authenticated user details
      */
@@ -135,6 +158,20 @@ class passportAuthController extends Controller
     public function authenticatedSellerDetails(){
         $seller = auth()->user();
         return response()->json(['authenticated-seller' => $seller], 200);
+    }
+
+    public function userDetails(){
+        $user = User::whereHas('role',function ($query) {
+            $query->where('name','user');
+        })->get();
+        return response()->json(['user' => $user], 200);
+    }
+
+    public function sellerDetails(){
+        $user = User::whereHas('role',function ($query) {
+            $query->where('name','seller');
+        })->get();
+        return response()->json(['seller' => $user], 200);
     }
 
     public function updateSeller(Request $request)
@@ -165,6 +202,30 @@ class passportAuthController extends Controller
             return response()->json(['Success'=>'Seller Updated Successfully!','seller'=>$seller??[]],200);
         }else{
             return response()->json(['fail'=>'Seller not Updated'],500);
+        }
+    }
+    
+    public function userDelete($id)
+    {
+        $user = User::where('id', $id)->whereHas('role',function ($query) {
+            $query->where('name','user');
+        })->first();
+        if(!empty($user)){
+            if($user->delete()) return response()->json(['status'=>'successfully deleted'],200);
+        }else{
+            return response()->json(["status" => 'fail', 500]);
+        }
+    }
+
+    public function sellerDelete($id)
+    {
+        $user = User::where('id', $id)->whereHas('role',function ($query) {
+            $query->where('name','seller');
+        })->first();
+        if(!empty($user)){
+            if($user->delete()) return response()->json(['status'=>'successfully deleted'],200);
+        }else{
+            return response()->json(["status" => 'fail', 500]);
         }
     }
 }

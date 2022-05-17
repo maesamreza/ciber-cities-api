@@ -25,7 +25,7 @@ class OrderController extends Controller
                     if(is_object($orders)) $orders = $orders->toArray(); 
                     $order = new Order();
                     $order->user_id = auth()->user()->id;    
-                    $order->seller_id = $orders['vendor_id'];    
+                    $order->seller_id = $orders['vendorId'];    
                     $order->customer_name = $orders['customer_name'];    
                     $order->email = $orders['email'];    
                     $order->phone = $orders['phone'];    
@@ -69,9 +69,9 @@ class OrderController extends Controller
                                 "description" => "Test payment from HNHTECHSOLUTIONS." 
                             ]);
                             $payment->stripe_id = $charge->id;
+                            $payment->brand = $request->token['brand'];
+                            $payment->card = $request->token['last4'];
                         }
-                        $payment->brand = $request->token['brand'];
-                        $payment->card = $request->token['last4'];
                         $payment->total = $request->total;
                         $payment->save();
                         $payment->orders()->sync($order_ids);

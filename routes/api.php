@@ -58,6 +58,7 @@ Route::middleware('auth:api')->group(function(){
     Route::get('seller-top-products',[App\Http\Controllers\ProductController::class,'seller_top_products']);
     Route::get('seller-totalsales-count',[App\Http\Controllers\ProductController::class,'seller_totalsales_count']);
     Route::get('seller-top-costomers',[App\Http\Controllers\ProductController::class,'seller_top_customers']);
+    Route::get('seller-line-chart',[App\Http\Controllers\ProductController::class,'seller_line_chart']);
     
     Route::get('admin-vendor-count',[App\Http\Controllers\ProductController::class,'admin_vendor_count']);
     Route::get('admin-vendor-sales',[App\Http\Controllers\ProductController::class,'admin_vendor_sales']);
@@ -70,7 +71,6 @@ Route::get('search/{name}', [App\Http\Controllers\ProductController::class,'sear
 Route::get('products',[App\Http\Controllers\ProductController::class,'show']);
 Route::get('category',[App\Http\Controllers\CategoryController::class,'show']);
 Route::post('search/category', [App\Http\Controllers\CategoryController::class,'searchCategory']);
-Route::get('seller-line-chart',[App\Http\Controllers\ProductController::class,'seller_line_chart']);
 
 
 

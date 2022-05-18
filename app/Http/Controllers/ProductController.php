@@ -412,16 +412,17 @@ class ProductController extends Controller
 
     public function seller_line_chart()
     {
-     $lineChart = Order::selectRaw("COUNT(*) as orders")
-     ->selectRaw("MONTHNAME(created_at) as month_name")
-     ->selectRaw("DATE(created_at) as date")
-     ->selectRaw('max(created_at) as createdAt')
-        ->whereMonth('created_at', date('m'))
-        ->groupBy('month_name')
-        ->groupBy('date')
-        ->orderBy('createdAt')
-        ->get();
-        return response()->json(["status" => 'success','lineChart' => $lineChart],200);
- 
+        $lineChart = Order::where('seller_id',auth()->user()->id)
+            ->selectRaw("COUNT(*) as orders")
+            ->selectRaw("sum(net_amount) as total_amount")
+            ->selectRaw("MONTHNAME(created_at) as month_name")
+            ->selectRaw("DATE(created_at) as date")
+            ->selectRaw('max(created_at) as createdAt')
+            ->whereMonth('created_at', date('m'))
+            ->groupBy('month_name')
+            ->groupBy('date')
+            ->orderBy('createdAt')
+            ->get();
+            return response()->json(["status" => 'success','lineChart' => $lineChart],200);
     }
 }

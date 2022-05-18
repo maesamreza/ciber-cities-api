@@ -8,8 +8,10 @@ use Illuminate\Http\Request;
 use App\Http\Resources\ProductsResource;
 use App\Models\Category;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\ProductImage;
 use App\Models\SubCategory;
+use App\Models\User;
 use Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
@@ -353,5 +355,73 @@ class ProductController extends Controller
         $seller_top_customers = $seller_top_customers->sortByDesc('total_amount')->values();
         return response()->json(["status" => 'success','seller_top_customers' => $seller_top_customers],200);
 
+    }
+
+    public function admin_totalsales_count()
+    {
+        $seller_totalsales_count=Payment::selectRaw('sum(total) AS total')->get();
+
+
+        $seller_todaysales_count=Payment::where('created_at',Carbon::today())
+        ->selectRaw('sum(total) AS total')->get();
+
+        $submonth = Carbon::now();
+        $subweek = Carbon::now();
+        
+        $seller_lastmonthsales_count=Payment::where('created_at','>=',$submonth->submonth())
+        ->where('created_at','<=',Carbon::today())
+        ->selectRaw('sum(total) AS total')->get();
+
+        $seller_lastweeksales_count=Payment::where('created_at','>=',$subweek->subweek())
+        ->where('created_at','<=',Carbon::today())
+        ->selectRaw('sum(total) AS total')->get();
+
+        return response()->json(["status" => 'success','totalsales_count'=>$seller_totalsales_count,'lastmonthsales_count' => $seller_lastmonthsales_count,'todaysales_count'=>$seller_todaysales_count,'lastweeksales_count'=>$seller_lastweeksales_count],200);
+    }
+
+    public function admin_vendor_count()
+    {
+        $vendor_count=User::whereHas('role',function($query){
+            $query->where('name','seller');
+        })->count();
+        $vendor_product_count = User::withCount('products')->get();
+        $vendor_product_count = $vendor_product_count->sortByDesc('products_count')->values();
+        return response()->json(["status" => 'success','vendors_count' => $vendor_count,
+        'vendor_products_count'=>$vendor_product_count],200);
+    }
+
+    public function admin_vendor_sales()
+    {
+        $admin_vendor_sales = Order::selectRaw('seller_id, SUM(net_amount) as total_amount')
+        ->with('seller')->groupBy('seller_id')->get();
+        $admin_vendor_sales = $admin_vendor_sales->sortByDesc('orders_count')->values();
+        return response()->json(["status" => 'success','admin_vendor_sales' => $admin_vendor_sales],200);
+    }
+
+    public function admin_customer_count()
+    {
+        $customer_count=User::whereHas('role',function($query){
+            $query->where('name','user');
+        })->count();
+        $top_customers = Order::selectRaw('user_id, SUM(net_amount) as total_amount')
+        ->with('users')->groupBy('user_id')->get();
+        $top_customers = $top_customers->sortByDesc('total_amount')->values();
+        return response()->json(["status" => 'success','customers_count' => $customer_count,'top_customers' => $top_customers],200);
+
+    }
+
+    public function seller_line_chart()
+    {
+     $lineChart = Order::selectRaw("COUNT(*) as orders")
+     ->selectRaw("MONTHNAME(created_at) as month_name")
+     ->selectRaw("DATE(created_at) as date")
+     ->selectRaw('max(created_at) as createdAt')
+        ->whereMonth('created_at', date('m'))
+        ->groupBy('month_name')
+        ->groupBy('date')
+        ->orderBy('createdAt')
+        ->get();
+        return response()->json(["status" => 'success','lineChart' => $lineChart],200);
+ 
     }
 }

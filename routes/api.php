@@ -54,19 +54,23 @@ Route::middleware('auth:api')->group(function(){
     Route::get('user-orders-details/{id}',[App\Http\Controllers\OrderController::class,'user_orders_details']);
     Route::get('seller-orders-details/{id}',[App\Http\Controllers\OrderController::class,'seller_orders_details']);
     
-        Route::get('seller-products-count',[App\Http\Controllers\ProductController::class,'seller_products_count']);
-        Route::get('seller-top-products',[App\Http\Controllers\ProductController::class,'seller_top_products']);
-        Route::get('seller-totalsales-count',[App\Http\Controllers\ProductController::class,'seller_totalsales_count']);
-        Route::get('seller-top-costomers',[App\Http\Controllers\ProductController::class,'seller_top_customers']);
+    Route::get('seller-products-count',[App\Http\Controllers\ProductController::class,'seller_products_count']);
+    Route::get('seller-top-products',[App\Http\Controllers\ProductController::class,'seller_top_products']);
+    Route::get('seller-totalsales-count',[App\Http\Controllers\ProductController::class,'seller_totalsales_count']);
+    Route::get('seller-top-costomers',[App\Http\Controllers\ProductController::class,'seller_top_customers']);
     
+    Route::get('admin-vendor-count',[App\Http\Controllers\ProductController::class,'admin_vendor_count']);
+    Route::get('admin-vendor-sales',[App\Http\Controllers\ProductController::class,'admin_vendor_sales']);
+    Route::get('admin-totalsales-count',[App\Http\Controllers\ProductController::class,'admin_totalsales_count']);
+    Route::get('admin-customer-count',[App\Http\Controllers\ProductController::class,'admin_customer_count']);
 });
-    Route::get('search/{name}', [App\Http\Controllers\ProductController::class,'search']);
-    // Route::get('search/{id}', [App\Http\Controllers\ProductController::class,'search']);
-    Route::get('products',[App\Http\Controllers\ProductController::class,'show']);
-    Route::get('category',[App\Http\Controllers\CategoryController::class,'show']);
-    Route::post('search/category', [App\Http\Controllers\CategoryController::class,'searchCategory']);
 
-
+Route::get('search/{name}', [App\Http\Controllers\ProductController::class,'search']);
+// Route::get('search/{id}', [App\Http\Controllers\ProductController::class,'search']);
+Route::get('products',[App\Http\Controllers\ProductController::class,'show']);
+Route::get('category',[App\Http\Controllers\CategoryController::class,'show']);
+Route::post('search/category', [App\Http\Controllers\CategoryController::class,'searchCategory']);
+Route::get('seller-line-chart',[App\Http\Controllers\ProductController::class,'seller_line_chart']);
 
 
 

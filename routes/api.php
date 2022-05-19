@@ -29,10 +29,13 @@ Route::middleware('auth:api')->group(function(){
     Route::post('update/seller', [App\Http\Controllers\passportAuthController::class,'updateSeller']);
     Route::post('update/user', [App\Http\Controllers\passportAuthController::class,'updateUser']);
     Route::get('vendor/products',[App\Http\Controllers\ProductController::class,'vendorProduct']);
+    Route::get('vendor/featured/products',[App\Http\Controllers\ProductController::class,'vendorFeaturedProduct']);
     Route::get('admin/user', [App\Http\Controllers\passportAuthController::class,'userDetails']);
     Route::get('admin/seller', [App\Http\Controllers\passportAuthController::class,'sellerDetails']);
     Route::get('admin/user/delete/{id}', [App\Http\Controllers\passportAuthController::class,'userDelete']);
     Route::get('admin/seller/delete/{id}', [App\Http\Controllers\passportAuthController::class,'sellerDelete']);
+    Route::get('admin/seller/prod/featured', [App\Http\Controllers\ProductController::class,'featureProduct']);
+    Route::get('admin/seller/prod/featured/{id}', [App\Http\Controllers\ProductController::class,'featureProductStatusChange']);
     
     Route::post('add/product',[App\Http\Controllers\ProductController::class,'add']);
     Route::post('update/product',[App\Http\Controllers\ProductController::class,'update']);

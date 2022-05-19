@@ -29,6 +29,13 @@ class ProductController extends Controller
        return response()->json(['Products'=>ProductsResource::collection($all_product)],200);
     }
 
+    public function vendorFeaturedProduct()
+    {
+        $product = Product::with('user')->where('featured','Featured')->where('status','active')->get();
+        return response()->json(['status'=>'success','products'=>$product??[]],200);
+
+    }
+
     public function showProduct(Request $request)
     {
        $all_product = Product::where('id',$request->id)->has('user')->with('user','images','subCategories.categories')->get();
@@ -267,6 +274,8 @@ class ProductController extends Controller
             $product->featured = $request->featured;
             if($request->featured == "Featured"){
                 $product->status = "pending";
+            }else{
+                $product->status = null;
             }
             $product->details = $request->product_details;
             $product->save();
@@ -432,5 +441,28 @@ class ProductController extends Controller
             ->orderBy('createdAt')
             ->get();
             return response()->json(["status" => 'success','lineChart' => $lineChart],200);
+    }
+
+    public function featureProduct()
+    {
+        $product = Product::with('user')->where('featured','Featured')->get();
+        return response()->json(["status" => 'success','feature_products' => $product],200);
+
+    }
+
+    public function featureProductStatusChange($id)
+    {
+        $product = Product::where('id',$id)->first();
+        if($product->status == "active" && $product->featured == "Featured"){
+            $product->status = "pending";
+        }elseif($product->status == "pending" && $product->featured == "Featured"){
+            $product->status = "active";
+        }else{
+            $product->status = null;
+        }
+        $product->save();
+        return response()->json(["status" => 'success','feature_products' => $product],200);
+
+
     }
 }

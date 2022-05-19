@@ -205,6 +205,35 @@ class passportAuthController extends Controller
         }
     }
     
+    public function updateUser(Request $request)
+    {
+        $valid = Validator::make($request->all(),[
+            'name'=>'required',
+            // 'company'=>'required',
+            'phone'=>'nullable',
+            'city'=>'nullable',
+            'state'=>'nullable',
+            'address'=>'nullable',
+        ]);
+        
+        if($valid->fails()){
+            
+            return response()->json(['status'=>'fails','message'=>'Validation errors','errors'=>$valid->errors()]);
+        }
+            $user = User::where('id',auth()->user()->id)->first();
+            $user->name=$request->name;
+            // $user->company=$request->company;
+            $user->phone=$request->phone;
+            $user->city=$request->city;
+            $user->state=$request->state;
+            $user->address=$request->address;
+        if($user->save()){
+            return response()->json(['Success'=>'user Updated Successfully!','user'=>$user??[]],200);
+        }else{
+            return response()->json(['fail'=>'User not Updated'],500);
+        }
+    }
+
     public function userDelete($id)
     {
         $user = User::where('id', $id)->whereHas('role',function ($query) {

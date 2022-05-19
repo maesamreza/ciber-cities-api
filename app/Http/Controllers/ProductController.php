@@ -41,15 +41,16 @@ class ProductController extends Controller
             'product_name'=>'required',
             'price'=>'required',
             'discount'=>'required',
-            'color'=>'required|array',
-            'size'=>'required|array',
+            // 'color'=>'required|array',
+            'size'=>'required',
             'brand'=>'required',
             'product_status'=>'required',
             'product_selected_qty'=>'nullable',
-            'product_stock'=>'required',
+            // 'product_stock'=>'required',
             'product_details'=>'required',
             'product_image'=>'required|array',
             'category'=>'required',
+            'featured'=>'required',
             'sub_category'=>'required',
             // 'description'=>'required',
             // 'rating'=>'required',
@@ -94,12 +95,16 @@ class ProductController extends Controller
             $new_product->name = $request->product_name;
             $new_product->price = $request->price;
             $new_product->discount_price = $request->discount;
-            $new_product->color = $request->color;
+            // $new_product->color = $request->color;
             $new_product->size = $request->size;
             $new_product->brand = $request->brand;
-            $new_product->status = $request->product_status;
-            $new_product->stock = $request->product_stock;
+            $new_product->type = $request->product_status;
+            // $new_product->stock = $request->product_stock;
             $new_product->details = $request->product_details;
+            $new_product->featured = $request->featured;
+            if($request->featured == "Featured"){
+                $new_product->status = "pending";
+            }
             // $new_product->short_description = $request->short_description;
             // $new_product->description = $request->description;
             // $new_product->rating = $request->rating;
@@ -202,14 +207,14 @@ class ProductController extends Controller
             'product_name'=>'required',
             'price'=>'required',
             'discount'=>'required',
-            'color'=>'required|array',
-            'size'=>'required|array',
+            // 'color'=>'required|array',
+            'size'=>'required',
             'brand'=>'required',
             'product_status'=>'required',
             // 'product_selected_qty'=>'nullable',
-            'product_stock'=>'required',
+            // 'product_stock'=>'required',
             'product_details'=>'required',
-            // 'product_image'=>'required|array',
+            'featured'=>'required',
             'category'=>'required',
             'sub_category'=>'required',
             // 'description'=>'required',
@@ -255,11 +260,14 @@ class ProductController extends Controller
             $product->name = $request->product_name;
             $product->price = $request->price;
             $product->discount_price = $request->discount;
-            $product->color = $request->color;
+            // $product->color = $request->color;
             $product->size = $request->size;
             $product->brand = $request->brand;
-            $product->status = $request->product_status;
-            $product->stock = $request->product_stock;
+            $product->type = $request->product_status;
+            $product->featured = $request->featured;
+            if($request->featured == "Featured"){
+                $product->status = "pending";
+            }
             $product->details = $request->product_details;
             $product->save();
             return response()->json(['Successfull'=>'Product Updated Successfully!'],200);
@@ -362,7 +370,7 @@ class ProductController extends Controller
         $seller_totalsales_count=Payment::selectRaw('sum(total) AS total')->get();
 
 
-        $seller_todaysales_count=Payment::where('created_at',Carbon::today())
+        $seller_todaysales_count=Payment::whereDate('created_at',Carbon::today())
         ->selectRaw('sum(total) AS total')->get();
 
         $submonth = Carbon::now();

@@ -27,6 +27,7 @@ Route::middleware('auth:api')->group(function(){
     Route::get('user', [App\Http\Controllers\passportAuthController::class,'authenticatedUserDetails']);
     Route::get('seller', [App\Http\Controllers\passportAuthController::class,'authenticatedSellerDetails']);
     Route::post('update/seller', [App\Http\Controllers\passportAuthController::class,'updateSeller']);
+    Route::post('update/user', [App\Http\Controllers\passportAuthController::class,'updateUser']);
     Route::get('vendor/products',[App\Http\Controllers\ProductController::class,'vendorProduct']);
     Route::get('admin/user', [App\Http\Controllers\passportAuthController::class,'userDetails']);
     Route::get('admin/seller', [App\Http\Controllers\passportAuthController::class,'sellerDetails']);

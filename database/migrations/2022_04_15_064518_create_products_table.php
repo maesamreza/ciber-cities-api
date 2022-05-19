@@ -25,8 +25,10 @@ return new class extends Migration
             $table->mediumText('details')->nullable();
             $table->string('brand')->nullable();
             $table->string('selected_qty')->nullable();
-            $table->string('status')->nullable();
+            $table->string('type')->nullable();
             $table->string('stock')->nullable();
+            $table->string('status')->nullable();
+            $table->string('featured')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('sub_category_id')->references('id')->on('sub_categories')->onDelete('cascade');
             // $table->integer('rating')->nullable();

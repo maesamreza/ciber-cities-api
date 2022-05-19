@@ -11,21 +11,21 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = ['category'];
-    public function color(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => json_decode($value),
-            set: fn ($value) => json_encode($value)
-        );
-    }
+    // public function color(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => json_decode($value),
+    //         set: fn ($value) => json_encode($value)
+    //     );
+    // }
     
-    public function size(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => json_decode($value),
-            set: fn ($value) => json_encode($value)
-        );
-    }
+    // public function size(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($value) => json_decode($value),
+    //         set: fn ($value) => json_encode($value)
+    //     );
+    // }
 
     public function user()
     {

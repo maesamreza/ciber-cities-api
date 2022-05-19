@@ -58,8 +58,8 @@ class ProductSeeder extends Seeder
             // $product->color = ["Red","Black","White","Blue"];
             $product->size = "small medium large xlarge";
             $product->brand = 'V-Neck T-Shirt';
-            $product->status = 'New';
-            $product->stock = '50';
+            $product->type = 'New';
+            // $product->stock = '50';
             $product->featured = 'Standard';
             $product->details = "<p>Product Details:</p><ul><li>4.5 inch Gold Heel</li> <li>Pointed Toe</li><li>Patent</li> <li>Imported</li></ul>";
             // $product->short_description = 'This is a variable product.	';

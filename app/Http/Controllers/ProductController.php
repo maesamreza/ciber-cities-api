@@ -31,7 +31,7 @@ class ProductController extends Controller
 
     public function vendorFeaturedProduct()
     {
-        $product = Product::with('images')->with('user')->where('featured','Featured')->where('status','active')->get();
+        $product = Product::with('images','subcategories.categories','user')->where('featured','Featured')->where('status','active')->get();
         return response()->json(['status'=>'success','products'=>$product??[]],200);
 
     }

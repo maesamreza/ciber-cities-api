@@ -29,7 +29,6 @@ Route::middleware('auth:api')->group(function(){
     Route::post('update/seller', [App\Http\Controllers\passportAuthController::class,'updateSeller']);
     Route::post('update/user', [App\Http\Controllers\passportAuthController::class,'updateUser']);
     Route::get('vendor/products',[App\Http\Controllers\ProductController::class,'vendorProduct']);
-    Route::get('vendor/featured/products',[App\Http\Controllers\ProductController::class,'vendorFeaturedProduct']);
     Route::get('admin/user', [App\Http\Controllers\passportAuthController::class,'userDetails']);
     Route::get('admin/seller', [App\Http\Controllers\passportAuthController::class,'sellerDetails']);
     Route::get('admin/user/delete/{id}', [App\Http\Controllers\passportAuthController::class,'userDelete']);
@@ -48,10 +47,10 @@ Route::middleware('auth:api')->group(function(){
     Route::post('order/review',[App\Http\Controllers\OrderController::class,'review']);
     Route::get('order/rating',[App\Http\Controllers\OrderController::class,'rating']);
     Route::get('order/sales',[App\Http\Controllers\OrderController::class,'sales']);
-
+    
     Route::post('payment',[App\Http\Controllers\PaymentController::class,'payment']);
     // Route::post('add/product/seller',[App\Http\Controllers\ProductController::class,'sellerAddProd']);
-
+    
     Route::get('user-orders',[App\Http\Controllers\OrderController::class,'user_orders']);
     Route::get('seller-orders',[App\Http\Controllers\OrderController::class,'seller_orders']);
     
@@ -70,6 +69,7 @@ Route::middleware('auth:api')->group(function(){
     Route::get('admin-customer-count',[App\Http\Controllers\ProductController::class,'admin_customer_count']);
 });
 
+Route::get('vendor/featured/products',[App\Http\Controllers\ProductController::class,'vendorFeaturedProduct']);
 Route::get('search/{name}', [App\Http\Controllers\ProductController::class,'search']);
 // Route::get('search/{id}', [App\Http\Controllers\ProductController::class,'search']);
 Route::get('products',[App\Http\Controllers\ProductController::class,'show']);

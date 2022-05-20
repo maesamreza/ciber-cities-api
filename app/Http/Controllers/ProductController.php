@@ -23,6 +23,11 @@ class ProductController extends Controller
        return response()->json(['Products'=>ProductsResource::collection($all_product)],200);
     }
 
+    public function product_show($id)
+    {
+        $product = Product::with('images','subcategories.categories','user')->where('id',$id)->get();
+        return response()->json(['status'=>'success','products'=>$product??[]],200);
+    }
     public function vendorProduct()
     {
        $all_product = Product::has('user')->with('user','images','subCategories.categories')->where('user_id',auth()->user()->id)->get();

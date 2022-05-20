@@ -69,6 +69,7 @@ Route::middleware('auth:api')->group(function(){
     Route::get('admin-customer-count',[App\Http\Controllers\ProductController::class,'admin_customer_count']);
 });
 
+Route::get('product/{id}',[App\Http\Controllers\ProductController::class,'product_show']);
 Route::get('vendor/featured/products',[App\Http\Controllers\ProductController::class,'vendorFeaturedProduct']);
 Route::get('search/{name}', [App\Http\Controllers\ProductController::class,'search']);
 // Route::get('search/{id}', [App\Http\Controllers\ProductController::class,'search']);

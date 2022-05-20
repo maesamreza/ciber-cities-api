@@ -145,7 +145,7 @@ class OrderController extends Controller
 
     public function user_orders()
     {
-        $all_orders = Order::where('user_id',auth()->user()->id)->with('users')->get();
+        $all_orders = Order::where('user_id',auth()->user()->id)->with('users','seller')->get();
 
         return response()->json(['status'=>'success','orders'=>$all_orders]);
 
